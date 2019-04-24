@@ -2,8 +2,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
+    "outDir": "./out/js-compiled",
+    "sourceMap": false,
     "declaration": false,
     "module": "es2015",
     "moduleResolution": "node",
@@ -18,5 +18,8 @@
       "es2018",
       "dom"
     ]
-  }
+  },
+  "include": [
+    "./src/**/*"
+    ],
 }
