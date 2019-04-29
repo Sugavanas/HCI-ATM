@@ -7,23 +7,35 @@ content{
     padding: 10px 10px;
 }
 
+/** Background **/
+
 @import url('https://fonts.googleapis.com/css?family=Montserrat:700');
- .hero {
+ .background {
 	 background-color: #0040c1;
 	 position: relative;
 	 height: 100vh;
 	 overflow: hidden;
-	 font-family: 'Montserrat', sans-serif;
-}
- .hero__title {
 	 color: #fff;
+}
+
+ .background-title {
 	 position: absolute;
-	 top: 50%;
+	 top: 25%;
 	 left: 50%;
 	 transform: translate(-50%, -50%);
-	 font-size: 50px;
+	 font-size: 40px;
 	 z-index: 1;
 }
+
+.background-info {
+	text-align: center;
+	font-size: 20px;
+	position: absolute;
+	top: 75%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
  .cube {
 	 position: absolute;
 	 top: 80vh;
@@ -34,35 +46,49 @@ content{
 	 transform-origin: top left;
 	 transform: scale(0) rotate(0deg) translate(-50%, -50%);
 	 animation: cube 12s ease-in forwards infinite;
+	 z-index: -1;
 }
+
  .cube:nth-child(2n) {
 	 border-color: #0051f4;
 }
+
  .cube:nth-child(2) {
 	 animation-delay: 2s;
 	 left: 25vw;
 	 top: 40vh;
 }
+
  .cube:nth-child(3) {
 	 animation-delay: 4s;
 	 left: 75vw;
 	 top: 50vh;
 }
+
  .cube:nth-child(4) {
 	 animation-delay: 6s;
 	 left: 90vw;
 	 top: 10vh;
 }
+
  .cube:nth-child(5) {
 	 animation-delay: 8s;
 	 left: 10vw;
 	 top: 85vh;
 }
+
  .cube:nth-child(6) {
-	 animation-delay: 10s;
+	 animation-delay: 9s;
 	 left: 50vw;
 	 top: 10vh;
 }
+
+.cube:nth-child(7) {
+	animation-delay: 10s;
+	left: 90vw;
+    top: 75vh;
+}
+
  @keyframes cube {
 	 from {
 		 transform: scale(0) rotate(0deg) translate(-50%, -50%);
@@ -74,3 +100,10 @@ content{
 	}
 }
  
+/** Button CSS **/
+
+.btnBottomLeft {
+	position: fixed;
+	right: 3vw;
+	bottom: 5vh;
+}

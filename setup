@@ -1,1 +1,3 @@
 npm install --save-dev browserify tsify vinyl-source-stream gulp typescript 
+
+gulp default

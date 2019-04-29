@@ -1,10 +1,21 @@
-import { Page } from './page';
+import { Main } from './main';
 
-export class splash implements Page{
-    load() : void
+export class Splash { //implements Page {
+    static load() : void
     {
-        console.log("Test1");
-    }
+        console.log("Splash Screen");
+        Main.getAndLoad("splash.html",  {"title" : "Splash Screen"}, function() {
+            Main.addBtnListener("insertCard", function(){
+                Main.getAndLoad("enterpin.html",  [], function() {
 
+                });
+            });    
+        });
+       
+
+          //setTimeout(function () {
+         //   Main.loadMain();
+        // }, 5000);
+    }
 }
     
