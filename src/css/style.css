@@ -107,3 +107,80 @@ content{
 	right: 3vw;
 	bottom: 5vh;
 }
+
+.btnCenter {
+	position: fixed;
+	top: 75%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+/** NumPad CSS **/
+
+.numpadModalDialog {
+	max-width: 33.3%;
+	max-height: 75%;
+}
+.numpad {
+	width: 100%;
+}
+
+.numPadKey  { 
+	padding: 5px 10px;
+	width: 33.3%;
+}
+
+.numPadBtn  {
+	padding: 5px 10px;
+	width: 50%;
+}
+
+.numPadKey button,
+.numPadBtn button {
+	width: 100%;
+	min-height: 50px;
+	background-color: blue;
+	color: white;
+}
+
+.numPadRow  {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	margin-right: -15px;
+	margin-left: -15px;
+}
+
+.ui-pinpad {
+    position: absolute;
+}
+
+.ui-pinpad-inline {
+    display: inline-block;
+    position: relative;
+}
+
+.ui-pinpad .ui-pinpad-num-pad,
+.ui-pinpad .ui-pinpad-command-panel {
+    float: left;
+}
+
+.ui-pinpad table {
+    border-collapse: collapse;
+}
+
+.ui-pinpad .ui-pinpad-num-pad table td {
+    text-align: center;
+}
+
+.ui-pinpad .ui-pinpad-key,
+.ui-pinpad .ui-pinpad-command {
+    width: 100%;
+}
+
+/* IE Only */
+
+input[type=text]::-ms-clear {
+    display: none;
+}

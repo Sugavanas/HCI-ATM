@@ -42,9 +42,18 @@ export class Main {
         this.get("background.html", function(template) {
             $("body").removeClass("background");
             $("body").addClass("background").html($(template).filter('#tplContent').html());
+            Main.loadIncludes();
          });
     }
 
+    static loadIncludes() : void
+    {
+        $.get("/includes/numpad.html", function(template){
+            $("#numPadTemplate").html(template);
+          });
+    }
+    
+    //don't use this for now
     static removeBackground() : void
     {
         $(".cube").remove();
@@ -66,4 +75,39 @@ export class Main {
         else
             console.log("ID: " + id + " not found in document");
     }
+
+    static loadNumberPad(title : string, add? : Function, backspace? : Function, clear? : Function, confirm? : Function, cancel? : Function) : void
+    { 
+        $('#numPadModal').modal('show');
+        this.bindKeyboardListener(function(key) {
+                        
+        });
+    }
+
+    static bindKeyboardListener(callback) : void
+    {
+        $(document).keypress(function(e) {
+            var key = e.which;
+            
+            callback(key);
+        });
+        //Make sure backspace doesn't redirect back
+        $(document).on("keydown", function (e) { 
+            if (e.which === 8 && !$(e.target).is("input, textarea")) {
+                e.preventDefault();
+                callback(e.which);
+            }
+            else if (e.which === 13 && !$(e.target).is("input, textarea")) {
+                e.preventDefault();
+                callback(e.which);
+            }
+        });
+    }
+
+    static unbindKeyboardListener() : void
+    {
+        $(window).unbind("keypress");
+        $(window).unbind("keydown");
+    }
+    
 }

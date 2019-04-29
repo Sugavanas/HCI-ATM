@@ -6,6 +6,10 @@
           transform: translate(-50%, -50%);
           position: absolute;
       }
+
+     .pinBoxes:hover > .pinBox,  .pinBoxes.focus > .pinBox{
+        background: rgba(109, 109, 109, 0.5);
+      }
       
       .pinBox{
         height: 40px;
@@ -17,7 +21,7 @@
 
     <div class="background-title">Enter pin</div>
 
-    <div class="pinBoxes">
+    <div class="pinBoxes" id="pinBoxes">
         <div class="pinBox"></div>
         <div class="pinBox"></div>
         <div class="pinBox"></div>
@@ -25,4 +29,7 @@
         <div class="pinBox"></div>
         <div class="pinBox"></div>
     </div>
+    <input type="hidden" id="pinNumber"/>
+
+    <button class="btn btn-success btnCenter" id="confirmPin">Confirm</button>
 </tpl>

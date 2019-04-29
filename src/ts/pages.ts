@@ -1,20 +1,21 @@
-import { Main } from './main';
+import { Main as m } from './main';
+import { s } from './s';
+import {EnterPin} from './pages/enterpin';
 
 export class Pages { //implements Page {
     static splash() : void
     {
-        Main.getAndLoad("splash.html",  {"title" : "Splash Screen"}, function() {
-            Main.addBtnListener("insertCard", function(){
-               Pages.enterpin();
+        m.getAndLoad("splash.html",  {"title" : "Splash Screen"}, function() {
+            m.addBtnListener("insertCard", function(){
+               
+                Pages.enterpin();
             });    
         });
     }
 
     static enterpin() : void
     {
-        Main.getAndLoad("enterpin.html",  [], function() {
-
-        });
+        EnterPin.load();
     }
 }
     
