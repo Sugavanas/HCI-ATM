@@ -1,5 +1,6 @@
 import { Main as m } from './../main';
 import { s } from './../s';
+import { NumPad } from './../numpad'
 
 export class EnterPin
 {
@@ -24,12 +25,12 @@ export class EnterPin
                 });
             });
             
-           
             m.addBtnListener("pinBoxes", function(){
-                m.unbindKeyboardListener();
-                m.loadNumberPad();
+                m.unbindKeyboardListener("pinBoxes");
 
-
+                NumPad.load("pinBoxes", "Enter Pin", $("#pinNumber").val().toString(), 6, 6, true, false, false, function(){
+                    EnterPin.bindKeyboardListener();
+                },  EnterPin.pinNumber.add, EnterPin.pinNumber.backspace, EnterPin.pinNumber.clear, EnterPin.pinNumber.confirm );
 
                 //simple hack to highlight the div
                 $(".pinBoxes").addClass("focus");
@@ -44,34 +45,14 @@ export class EnterPin
 
     static bindKeyboardListener() : void
     {
-        m.bindKeyboardListener(function(key) {
-            var pin : string =  $("#pinNumber").val().toString();
+        m.bindKeyboardListener("pinBoxes", function(key) {
+          
             if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
-            {
-                if(pin.length < 6) // not more than 5
-                    $("#pinNumber").val( pin + (String.fromCharCode(key))).trigger('change');;
-            }
+                EnterPin.pinNumber.add(String.fromCharCode(key));
             else if(key === 8)
-            {
-                $("#pinNumber").val(
-                    function(index, value){
-                        return value.substr(0, value.length - 1);
-                }).trigger('change');
-            }
+                EnterPin.pinNumber.backspace();
             else if(key === 13)
-            {
-                if(pin.length >= 6)
-                {
-                    if(pin == "123456")
-                    {
-                        console.log("verified");
-                    }
-                    else
-                    {
-                        //show error
-                    }
-                }
-            }
+                EnterPin.pinNumber.confirm();
             else
             {
                 $.toast({
@@ -82,5 +63,44 @@ export class EnterPin
                 })
             }
         });
+    }
+
+    static pinNumber = class
+    {
+        static add(val) : void
+        {
+            var pin : string =  $("#pinNumber").val().toString();
+            if(pin.length < 6) // not more than 5
+                $("#pinNumber").val(pin + val).trigger('change');;
+        }
+
+        static backspace() : void
+        {
+            $("#pinNumber").val(
+                function(index, value){
+                    return value.substr(0, value.length - 1);
+            }).trigger('change');
+        }
+
+        static confirm() : void
+        {
+            var pin : string =  $("#pinNumber").val().toString();
+            if(pin.length >= 6)
+            {
+                if(pin == "123456")
+                {
+                    console.log("verified");
+                }
+                else
+                {
+                    //show error
+                }
+            }
+        }
+
+        static clear() : void
+        {
+
+        }
     }
 }

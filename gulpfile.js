@@ -8,6 +8,7 @@ var jsSources = ['./src/**/*.js'],
     tsSources = ['./src/**/*.ts'],
     sassSources = ['./src/css/*.css'],
     htmlSources = ['./src/**/*.html'],
+    fontSources = ['./src/webfonts/*'],
     outputJSDir = './out/',
     outputCSSDir = './out/css',
     outputHTMLDir = './out/';
@@ -51,11 +52,20 @@ gulp.task('ts',  done => {
   done();
 });
 
+gulp.task('fonts',  done => {
+  gulp.src(fontSources)
+  .pipe(gulp.dest("./out/webfonts/"))
+  .pipe(connect.reload());
+  done();
+});
+
+
 gulp.task('watch',  done => {
   gulp.watch(jsSources, gulp.series('js'));
   gulp.watch(tsSources, gulp.series('ts'));
   gulp.watch(sassSources,  gulp.series('sass'));
   gulp.watch(htmlSources,  gulp.series('html'));
+  gulp.watch(fontSources,  gulp.series('fonts'));
   done();
 });
 
@@ -75,4 +85,4 @@ gulp.task('html', done => {
 });
 
 
-gulp.task('default', gulp.parallel('html', 'js', 'ts', 'sass', 'connect', 'watch'));
+gulp.task('default', gulp.parallel('html', 'js', 'ts', 'sass', 'connect', 'watch', 'fonts'));

@@ -118,21 +118,25 @@ content{
 /** NumPad CSS **/
 
 .numpadModalDialog {
-	max-width: 33.3%;
 	max-height: 75%;
 }
+
+.numpadModalDialog label {
+	color: #000;
+}
+
 .numpad {
 	width: 100%;
 }
 
 .numPadKey  { 
-	padding: 5px 10px;
+	padding: 3px 3px;
 	width: 33.3%;
 }
 
 .numPadBtn  {
-	padding: 5px 10px;
-	width: 50%;
+	padding: 3px 3px;
+	width: 100%;
 }
 
 .numPadKey button,
@@ -143,13 +147,16 @@ content{
 	color: white;
 }
 
+.numPadKey button.hovered,
+.numPadKey button:hover {
+	background-color: lightblue;
+}
+
 .numPadRow  {
 	display: -ms-flexbox;
 	display: flex;
 	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
-	margin-right: -15px;
-	margin-left: -15px;
 }
 
 .ui-pinpad {

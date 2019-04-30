@@ -1,64 +1,84 @@
-<div class="modal fade" id="numPadModal" tabindex="-1" role="dialog" aria-labelledby="numPadModal" aria-hidden="true">
-    <div class="modal-dialog numpadModalDialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="numPadModalTitle">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <input type="text" id="numPadInput"  class="form-control" disabled/>
-                <div class="numpad" id="numpad">
-                    <div style="width: 100%; padding: 10px;">
-                        <div class="numPadRow">
-                            <div class="numPadKey">
-                                <button class="btn ">7</button>
+<tpl id="tplContent">
+    <div class="modal fade" id="{{numPadModalID}}" tabindex="-1" role="dialog" aria-labelledby="{{numPadModalID}}"
+        aria-hidden="true">
+        <div class="modal-dialog numpadModalDialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <label for="numPadInput">{{numPadModalTitle}}</label>
+                    <input type="text" id="numPadInputMask" class="form-control" autocomplete="off" disabled />
+                    <input type="hidden" id="numPadInput" class="form-control" autocomplete="off"/>
+                    <div class="numpad" id="numpad">
+                        <div style="width: 65%; padding: 10px 5px; display:inline-block;">
+                            <div class="numPadRow">
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="1">1</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="2">2</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="3">3</button>
+                                </div>
                             </div>
-                            <div class="numPadKey">
-                                <button class="btn ">8</button>
+                            <div class="numPadRow">
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="4">4</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="5">5</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="6">6</button>
+                                </div>
                             </div>
-                            <div class="numPadKey">
-                                <button class="btn ">9</button>
+                            <div class="numPadRow">
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="7">7</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="8">8</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="9">9</button>
+                                </div>
+                            </div>
+                            <div class="numPadRow">
+                                <div class="numPadKey">
+                                    <button class="btn">.</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadKeyNumber" data-val="0">0</button>
+                                </div>
+                                <div class="numPadKey">
+                                    <button class="btn numPadBackSpace"><i class="fas fa-backspace"></i></button>
+                                </div>
                             </div>
                         </div>
-                        <div class="numPadRow">
-                            <div class="numPadKey">
-                                <button class="btn ">4</button>
+                        <div style="width:30%; display:inline-block; vertical-align: top; padding: 10px 0px;">
+                            <div class="numPadRow">
+                                <div class="numPadBtn">
+                                    <button class="btn bg-danger numPadCancel">Cancel</button>
+                                </div>
                             </div>
-                            <div class="numPadKey">
-                                <button class="btn ">5</button>
+                            <div class="numPadRow">
+                                <div class="numPadBtn">
+                                    <button class="btn bg-warning numPadClear">Clear</button>
+                                </div>
                             </div>
-                            <div class="numPadKey">
-                                <button class="btn ">6</button>
+                            <div class="numPadRow">
+                                <div class="numPadBtn">
+                                    <button class="btn bg-success numPadConfirm">Confirm</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="numPadRow">
-                            <div class="numPadKey">
-                                <button class="btn ">1</button>
-                            </div>
-                            <div class="numPadKey">
-                                <button class="btn ">2</button>
-                            </div>
-                            <div class="numPadKey">
-                                <button class="btn ">3</button>
-                            </div>
-                        </div>
-                        <div class="numPadRow">
-                            <div class="numPadBtn">
-                                <button class="btn" style="background: red;">Clear</button>
-                            </div>
-                            <div class="numPadBtn">
-                                <button class="btn" style="background: greenyellow;">Confirm</button>
+                            <div class="numPadRow">
+                                <div class="numPadBtn">
+                                  
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
         </div>
     </div>
-</div>
+</tpl>

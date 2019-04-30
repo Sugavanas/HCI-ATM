@@ -2,6 +2,7 @@
 //import * as $ from "jquery";
 
 import {Pages} from "./pages";
+import { s } from './s';
 
 $(document).ready(function() {
     Main.loadBackground();
@@ -75,24 +76,16 @@ export class Main {
         else
             console.log("ID: " + id + " not found in document");
     }
-
-    static loadNumberPad(title : string, add? : Function, backspace? : Function, clear? : Function, confirm? : Function, cancel? : Function) : void
-    { 
-        $('#numPadModal').modal('show');
-        this.bindKeyboardListener(function(key) {
-                        
-        });
-    }
-
-    static bindKeyboardListener(callback) : void
+    
+    static bindKeyboardListener(id, callback) : void
     {
-        $(document).keypress(function(e) {
+        $(document).on("keypress." + id, function(e) {
             var key = e.which;
-            
             callback(key);
         });
+
         //Make sure backspace doesn't redirect back
-        $(document).on("keydown", function (e) { 
+        $(document).on("keydown." + id, function (e) { //TODO combine the if statements
             if (e.which === 8 && !$(e.target).is("input, textarea")) {
                 e.preventDefault();
                 callback(e.which);
@@ -101,13 +94,17 @@ export class Main {
                 e.preventDefault();
                 callback(e.which);
             }
+            else if (e.which === 27 && !$(e.target).is("input, textarea")) {
+                e.preventDefault();
+                callback(e.which);
+            }
         });
     }
 
-    static unbindKeyboardListener() : void
+    static unbindKeyboardListener(id : string) : void
     {
-        $(window).unbind("keypress");
-        $(window).unbind("keydown");
+        $(document).unbind("keypress." + id);
+        $(document).unbind("keydown." + id);
     }
     
 }
