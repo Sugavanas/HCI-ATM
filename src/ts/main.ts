@@ -5,37 +5,64 @@ import {Pages} from "./pages";
 import { s } from './s';
 
 $(document).ready(function() {
-    Main.loadBackground();
-
-    Pages.splash();
-  
+    Main.initialLoad();
 });
 
 export class Main {
-    static get(page, callback) : void
+    static get(page : string, success : Function  = function() {}, fail : Function = function() {}) : void
     {
-        $.get("/pages/" + page, callback);
+        $.get("/pages/" + page, success).fail(function() { fail(); });
     }
 
-    static loadContent(content) 
+    static loadContent(content : string)  : void
     {
         $("#content").html(content);
     }
 
-    static processTpl(tpl : string, array)
+    static processTpl(tpl : string, array) : string
     {
         //TODO: check if tplContent exist before passing to mustache
         return $.mustache($(tpl).filter("#tplContent").html(), array);
     }
 
-    static getAndLoad(page : string, arrayVal : any = [], callback = function() {}) : void
+    static getAndLoad(page : string, arrayVal : any = []) : Promise<object>
     {
-        Main.get(page, function(template){
-            Main.loadContent(Main.processTpl(template, arrayVal));
-            
-            callback(); 
+        return new Promise(function(resolve, reject) { 
+            Main.get(page, function(template){
+                Main.loadContent(Main.processTpl(template, arrayVal));
+                resolve();
+            }, function(){
+                reject("Unexpected");
+            });
+        });
+    }
+
+    static loadErrorPage(error : string)
+    {
+        this.loadContent("<p class='error-center text-center'>" + error + "</p>");
+    }
+
+    static showLoader(text : string, runFunction : Promise<object>, callback? : Function) : void {
+        $("#loading-text").html(text);
+        $("#loading").css("display", "block");
+                
+        if(callback == null)
+            callback = function() {};
+
+        runFunction.then(data => {
+            callback();
+        }) 
+        .catch(error => { Main.loadErrorPage(error); })
+        .finally(function() {
+            $("#loading").css("display", "none");
         });
 
+    }
+
+    static initialLoad() : void
+    {
+        Main.loadBackground();
+        Pages.splash();
     }
 
     static loadBackground() : void
@@ -76,7 +103,7 @@ export class Main {
         else
             console.log("ID: " + id + " not found in document");
     }
-    
+
     static bindKeyboardListener(id, callback) : void
     {
         $(document).on("keypress." + id, function(e) {
@@ -105,6 +132,16 @@ export class Main {
     {
         $(document).unbind("keypress." + id);
         $(document).unbind("keydown." + id);
+    }
+
+    static addCancelBtn(callback? : Function)
+    {
+        if($('#btnBottomCancel').length == 0)
+            $("body").append('<button class="btn btn-danger btnBottomLeft" id="btnBottomCancel">Cancel</button>');
+
+        $('#btnBottomCancel').unbind("click");
+
+        Main.addBtnListener("btnBottomCancel", callback); 
     }
     
 }

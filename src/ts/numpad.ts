@@ -2,51 +2,56 @@ import { Main } from './main';
 import { s } from './s';
 
 export class NumPad{
-    static load(id:string, title : string, initialVal : string = "", min = 0, max = 100, isPassword : boolean = false, 
-        decimal : boolean = false, allowCents : boolean = false, close? : Function,
-        add? : Function, backspace? : Function, clear? : Function, confirm? : Function, cancel? : Function) : void
+    private modalID : string;
+    private numPadInput;
+
+    constructor(private id:string, private title : string, private initialVal : string = "", private min = 0, private max = 100, private isPassword : boolean = false, 
+                private decimal : boolean = false, private allowCents : boolean = false, private closeC? : Function, private autoDestruct : boolean = false,
+                private addC? : Function, private backspaceC? : Function, private clearC? : Function, private confirmC? : Function, private cancelC? : Function)
     { 
-        var modalID = "numPadModal-" + id;
-        
-        if(add == null)
-            add = function() {};
-        if(backspace == null)
-            backspace = function() {};
-        if(clear == null)
-            clear = function() {};
-        if(confirm == null)
-            confirm = function() {};
-        if(cancel == null)
-            cancel = function() {};
-        if(close == null)
-            cancel = function() {};
+        this.modalID = "numPadModal-" + id;
+        var instance = this;
+
+        if(addC == null)
+            addC = function() {};
+        if(backspaceC == null)
+            backspaceC = function() {};
+        if(clearC == null)
+            clearC = function() {};
+        if(confirmC == null)
+            confirmC = function() {};
+        if(cancelC == null)
+            cancelC = function() {};
+        if(closeC == null)
+            closeC = function() {};
 
         $.get("/includes/numpad.html", function(template){
-            var code = Main.processTpl(template, {"numPadModalID": modalID, "numPadModalTitle" : title});
+            var code = Main.processTpl(template, {"numPadModalID": instance.modalID, "numPadModalTitle" : title});
             
             $("#numPadTemplate").append(code);
           
             //show the modal on screen
-            $("#" + modalID).modal('show');
+            instance.show();
 
             //remove modal code from body when it goes off screen.
-            $("#" + modalID).on('hidden.bs.modal', function () {
-                Main.unbindKeyboardListener(id);
-                close();
-                $(this).remove();
+            $("#" + instance.modalID).on('hidden.bs.modal', function () {
+                instance.destruct();
             })
 
-            var numPadInput =  $("#" + modalID).find("#numPadInput");
+            instance.numPadInput =  $("#" + instance.modalID).find("#numPadInput");
            
             Main.bindKeyboardListener(id, function(key) {
                     if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
-                        NumPad.numPadAdd(String.fromCharCode(key), numPadInput, max, add);
+                    {
+                        instance.highlightKeysWhileTyping(String.fromCharCode(key));
+                        instance.add(String.fromCharCode(key));
+                    }
                     else if(key === 8)
-                        backspace()
+                    instance.backspace()
                     else if(key === 13)
-                        confirm();
+                        confirmC();
                     else if(key === 27)
-                        cancel();
+                        cancelC();
                     else
                     {
                         $.toast({
@@ -58,75 +63,109 @@ export class NumPad{
                     }
             });
 
-            if(isPassword)
-            {
-                numPadInput.on("change", function(){
-                    $("#" + modalID).find("#numPadInputMask").val(numPadInput.val().toString().replace(/[\S]/g, "*"));
-                });
-            }
-
-            numPadInput.on("change", function(){
+        
+            instance.numPadInput.on("change", function(){
                 var val = $(this).val().toString();
+                if(isPassword)
+                    $("#" + instance.modalID).find("#numPadInputMask").val(val.replace(/[\S]/g, "*"));
+                else
+                    $("#" + instance.modalID).find("#numPadInputMask").val(val);
+
+               
 
                 if(val.length < min || val.length > max)
-                {
-                    //disable confirm button
-                }
+                    $("#" + instance.modalID).find(".numPadConfirm").each(function() { $(this).attr("disabled", "true")});
                 else
-                {
-                    
-                }
+                    $("#" + instance.modalID).find(".numPadConfirm").each(function() { $(this).removeAttr("disabled")});
+            });
+            
+            $("#" + instance.modalID).find(".numPadConfirm").on("click", function(){
+                instance.confirm();
             });
 
-            $("#" + modalID).find(".numPadConfirm").on("click", function(){
-                confirm();
+            $("#" + instance.modalID).find(".numPadClear").on("click", function(){
+                instance.clear();
             });
 
-            $("#" + modalID).find(".numPadClear").on("click", function(){
-                confirm();
+            $("#" + instance.modalID).find(".numPadCancel").on("click", function(){
+                instance.cancel();
             });
 
-            $("#" + modalID).find(".numPadCancel").on("click", function(){
-                confirm();
-            });
-
-            $("#" + modalID).find(".numPadBackSpace").on("click", function(){
-                NumPad.numPadBackspace(numPadInput, backspace);
+            $("#" + instance.modalID).find(".numPadBackSpace").on("click", function(){
+                instance.backspace();
             });
 
             //When number is pressed, pass number to add function
-            $("#" + modalID).find(".numPadKeyNumber").each(function() {
+            $("#" + instance.modalID).find(".numPadKeyNumber").each(function() {
                 $(this).on("click", function(){
-                    NumPad.numPadAdd($(this).data("val"), numPadInput, max, add);
+                    instance.add($(this).data("val"));
                 });
             });
 
 
-            numPadInput.val(initialVal).trigger("change");
+            instance.numPadInput.val(initialVal).trigger("change");
         });
     }
 
-    private static numPadAdd(val, numPadInput, max, add : Function)
+    private show()
     {
-        if(numPadInput.val().toString().length < max) // <= (max - 1)
-        {
-            $('.numPadKeyNumber[data-val="'+val+'"]').addClass("hovered");
-            setTimeout(function() {
-                $('.numPadKeyNumber[data-val="'+val+'"]').removeClass("hovered");
-            }, 200);
+        $("#" + this.modalID).modal('show');
+    }
 
-            add(val);
-            numPadInput.val(numPadInput.val() + val).trigger("change");
+    private hide()
+    {
+        $("#" + this.modalID).modal('hide');
+    }
+
+    private destruct()
+    {
+        Main.unbindKeyboardListener(this.id);
+        this.closeC();
+        $("#" + this.modalID).remove();
+    }
+
+    private add(val)
+    {
+        if(this.numPadInput.val().toString().length < this.max) // <= (max - 1)
+        {
+            this.numPadInput.val(this.numPadInput.val() + val).trigger("change");
+            this.addC(val); 
         }
     }
 
-    private static numPadBackspace(numPadInput, backspace : Function)
+    private backspace()
     {
-        numPadInput.val(
+        this.numPadInput.val(
             function(index, value){
                 return value.substr(0, value.length - 1);
         }).trigger('change');
-        backspace();
+        this.backspaceC();
+    }
+
+    private clear()
+    {
+        this.numPadInput.val("").trigger("change");
+        this.clearC();
+    }
+
+    private confirm()
+    {
+        this.confirmC();
+        this.hide();
+    }
+
+    private cancel()
+    {
+        this.cancelC();
+        this.hide();
+    }
+
+    private highlightKeysWhileTyping(val)
+    {
+        $('.numPadKeyNumber[data-val="'+val+'"]').addClass("hovered");
+            setTimeout(function() {
+                $('.numPadKeyNumber[data-val="'+val+'"]').removeClass("hovered");
+            }, 200);
     }
 
 }

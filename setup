@@ -1,3 +1,6 @@
 npm install --save-dev browserify tsify vinyl-source-stream gulp typescript 
 
 gulp default
+
+
+Attribution CC-BY License: https://loading.io/spinner/double-ring

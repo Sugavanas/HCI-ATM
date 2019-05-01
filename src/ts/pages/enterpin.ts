@@ -4,43 +4,64 @@ import { NumPad } from './../numpad'
 
 export class EnterPin
 {
-    static load() : void
+    static load() : Promise<object>
     {
-        m.getAndLoad("enterpin.html",  [], function() {
-            EnterPin.bindKeyboardListener();
+        return new Promise(function(resolve, reject){
+            m.getAndLoad("enterpin.html",  []).then(data => {
+                EnterPin.bindKeyboardListener();
 
-            $("#pinNumber").on("change", function() {
-                var pin : string = $(this).val().toString();
+                $("#pinNumber").on("change", function() {
+                    var pin : string = $(this).val().toString();
+                    var i = 1;
+                    //looping every time there is a change is not the best way to do it, but who cares
+                    $(".pinBox").each(function() {
+                        $(this).css("background-image", "");
+                        if(i <= pin.length)
+                            $(this).css("background-image", "radial-gradient(circle at center, #fff 5px, transparent 6px)");
+                        
+                        i++
+                    });
 
-                var i = 1;
-                //looping every time there is a change is not the best way to do it, but who cares
-                $(".pinBox").each(function() {
-                    $(this).css("background-image", "");
+                    if(pin.length >= EnterPin.pinNumber.minChar && pin.length <= EnterPin.pinNumber.maxChar)
+                        $("#confirmPin").removeAttr("disabled");
+                    else
+                        $("#confirmPin").attr("disabled", "true");
+                });
+                
+                m.addBtnListener("pinBoxes", function(){
+                    m.unbindKeyboardListener("pinBoxes");
 
-                    if(i <= pin.length)
+                EnterPin.pinNumber.openKeyPad();
+
+                    //simple hack to highlight the div
+                    $(".pinBoxes").addClass("focus");
+                    $(document).mouseup(function(e) 
                     {
-                        $(this).css("background-image", "radial-gradient(circle at center, #fff 5px, transparent 6px)");
-                    }
-                    i++
+                        $(".pinBoxes").removeClass("focus");
+                        $(document).unbind("mouseup");
+                    });
                 });
-            });
-            
-            m.addBtnListener("pinBoxes", function(){
-                m.unbindKeyboardListener("pinBoxes");
 
-                NumPad.load("pinBoxes", "Enter Pin", $("#pinNumber").val().toString(), 6, 6, true, false, false, function(){
-                    EnterPin.bindKeyboardListener();
-                },  EnterPin.pinNumber.add, EnterPin.pinNumber.backspace, EnterPin.pinNumber.clear, EnterPin.pinNumber.confirm );
-
-                //simple hack to highlight the div
-                $(".pinBoxes").addClass("focus");
-                $(document).mouseup(function(e) 
-                {
-                    $(".pinBoxes").removeClass("focus");
-                    $(document).unbind("mouseup");
+                m.addBtnListener("confirmPin", function(){
+                    EnterPin.pinNumber.confirm();
                 });
-            });    
+
+                m.addBtnListener("clearPin", function(){
+                    EnterPin.pinNumber.clear();
+                });
+                
+                m.addCancelBtn(function() {
+                    EnterPin.cancel();
+                })
+               
+                     
+            }).catch(error => reject(error));
         });
+    }
+
+    static cancel() : void
+    {
+        m.initialLoad();
     }
 
     static bindKeyboardListener() : void
@@ -67,10 +88,20 @@ export class EnterPin
 
     static pinNumber = class
     {
+        static minChar = 6;
+        static maxChar = 6;
+
+        static openKeyPad() : void
+        {
+            new NumPad("pinBoxes", "Enter Pin", $("#pinNumber").val().toString(), EnterPin.pinNumber.minChar, EnterPin.pinNumber.maxChar, true, false, false, function(){
+                EnterPin.bindKeyboardListener();
+            }, true,  EnterPin.pinNumber.add, EnterPin.pinNumber.backspace, EnterPin.pinNumber.clear, EnterPin.pinNumber.confirm, EnterPin.cancel);
+        }
+
         static add(val) : void
         {
             var pin : string =  $("#pinNumber").val().toString();
-            if(pin.length < 6) // not more than 5
+            if(pin.length < EnterPin.pinNumber.maxChar) // not more than max
                 $("#pinNumber").val(pin + val).trigger('change');;
         }
 
@@ -85,7 +116,7 @@ export class EnterPin
         static confirm() : void
         {
             var pin : string =  $("#pinNumber").val().toString();
-            if(pin.length >= 6)
+            if(pin.length >= EnterPin.pinNumber.maxChar)
             {
                 if(pin == "123456")
                 {
@@ -100,7 +131,7 @@ export class EnterPin
 
         static clear() : void
         {
-
+            $("#pinNumber").val("").trigger('change');
         }
     }
 }
