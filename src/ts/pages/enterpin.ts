@@ -1,7 +1,8 @@
-import { Main as m } from './../main';
-import { s } from './../s';
+import { Main as m, Main } from './../main';
+import { s } from './../data/s';
 import { NumPad } from './../numpad'
-
+import {dummyAccounts, Account} from './../data/account';
+import { Menu } from './menu';
 export class EnterPin
 {
     static load() : Promise<object>
@@ -50,11 +51,9 @@ export class EnterPin
                     EnterPin.pinNumber.clear();
                 });
                 
-                m.addCancelBtn(function() {
-                    EnterPin.cancel();
-                })
+                m.addDefaultCancelBtn();
                
-                     
+                resolve();               
             }).catch(error => reject(error));
         });
     }
@@ -115,18 +114,31 @@ export class EnterPin
 
         static confirm() : void
         {
-            var pin : string =  $("#pinNumber").val().toString();
-            if(pin.length >= EnterPin.pinNumber.maxChar)
-            {
-                if(pin == "123456")
+            $("#error").css("display", "none");
+            Main.showLoader("Loading", new Promise(function(resolve, reject) {
+                var pin : string =  $("#pinNumber").val().toString();
+                if(pin.length >= EnterPin.pinNumber.maxChar)
                 {
-                    console.log("verified");
+                    let a : Account = dummyAccounts.getInstance().getAccountByPin(pin);
+                    if(a == null)
+                    {
+                        //show error
+                        setTimeout(() => {
+                            $("#error").html("Invalid Pin. Please try again.").css("display", "block");
+                            EnterPin.pinNumber.clear();
+                            resolve();
+                        }, (500));
+                    }
+                    else
+                    {
+                        console.log(a);
+                        dummyAccounts.getInstance().loggedInAccount = a;
+                        Menu.load().finally(() => resolve());
+                    }
+                    
                 }
-                else
-                {
-                    //show error
-                }
-            }
+            }));
+           
         }
 
         static clear() : void

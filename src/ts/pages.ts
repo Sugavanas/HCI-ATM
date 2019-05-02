@@ -1,5 +1,5 @@
 import { Main as m, Main } from './main';
-import { s } from './s';
+import { s } from './data/s';
 import {EnterPin} from './pages/enterpin';
 
 export class Pages { //implements Page {

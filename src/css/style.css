@@ -18,6 +18,7 @@ content{
 	 color: #fff;
 }
 
+
  .background-title {
 	 position: absolute;
 	 top: 25%;
@@ -34,6 +35,19 @@ content{
 	top: 75%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+.pageContent {
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	display: block;
+}
+
+.title {
+	font-size: 40px;
+	z-index: 1;
 }
 
  .cube {
@@ -140,8 +154,6 @@ content{
 	z-index: 2; 
 	cursor: progress; 
   }
-
-
  
 /** Button CSS **/
 
@@ -164,13 +176,25 @@ content{
 	transform: translate(-50%, -50%);
 }
 
+.btnDiv {
+	text-align: center!important;
+}
+
 .btnCenter > button,
-.btnCenter > button:hover {
+.btnCenter > button:hover,
+.btnDiv > button,
+.btnDiv > button:hover {
 	min-width: 150px;
 	min-height: 50px;
 	color: white;
 	font-size: 20px;
 	margin-right: 10px;
+}
+
+/** Alerts **/
+
+.alert {
+	margin: 10px 0;
 }
 
 /** NumPad CSS **/

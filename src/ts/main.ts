@@ -2,16 +2,22 @@
 //import * as $ from "jquery";
 
 import {Pages} from "./pages";
-import { s } from './s';
+
 
 $(document).ready(function() {
     Main.initialLoad();
 });
 
 export class Main {
-    static get(page : string, success : Function  = function() {}, fail : Function = function() {}) : void
+    static get(page : string) : Promise<object>
     {
-        $.get("/pages/" + page, success).fail(function() { fail(); });
+        return new Promise(function(resolve, reject) { 
+            $.get("/pages/" + page, function(data){
+                resolve(data);
+            }).fail(function(){
+                reject("Unexpected");
+            })
+        });
     }
 
     static loadContent(content : string)  : void
@@ -28,12 +34,11 @@ export class Main {
     static getAndLoad(page : string, arrayVal : any = []) : Promise<object>
     {
         return new Promise(function(resolve, reject) { 
-            Main.get(page, function(template){
-                Main.loadContent(Main.processTpl(template, arrayVal));
+            Main.get(page).then(template => {
+                //TODO: resolve after loading content to prevent errors if there is a delay.
+                Main.loadContent(Main.processTpl(template.toString(), arrayVal));
                 resolve();
-            }, function(){
-                reject("Unexpected");
-            });
+            }).catch(error => reject(error));
         });
     }
 
@@ -67,7 +72,7 @@ export class Main {
 
     static loadBackground() : void
     {
-        this.get("background.html", function(template) {
+        this.get("background.html").then(template => {
             $("body").removeClass("background");
             $("body").addClass("background").html($(template).filter('#tplContent').html());
             Main.loadIncludes();
@@ -144,4 +149,15 @@ export class Main {
         Main.addBtnListener("btnBottomCancel", callback); 
     }
     
+    static addDefaultCancelBtn()
+    {
+        Main.addCancelBtn(function(){
+            Main.showLoader("Quitting?", new Promise(function(resolve, reject) {
+                setTimeout(function(){
+                    Main.initialLoad();
+                    resolve();
+                }, 1000);
+            }));
+        });
+    }
 }

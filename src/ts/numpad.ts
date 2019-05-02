@@ -1,5 +1,5 @@
 import { Main } from './main';
-import { s } from './s';
+import { s } from './data/s';
 
 export class NumPad{
     private modalID : string;
