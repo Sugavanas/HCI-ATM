@@ -28,6 +28,14 @@ export class dummyAccounts
    {
        return (dummyAccounts.instance == null ? dummyAccounts.instance = new dummyAccounts() : dummyAccounts.instance);
    }
+
+   static isLoggedIn() : boolean
+   {
+       if(dummyAccounts.getInstance().loggedInAccount != null)
+        return true;
+    
+        return false;
+   }
 }
 
 export class Account 

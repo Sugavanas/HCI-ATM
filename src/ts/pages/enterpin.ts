@@ -60,6 +60,7 @@ export class EnterPin
 
     static cancel() : void
     {
+        m.unbindKeyboardListener("pinBoxes");
         m.initialLoad();
     }
 
@@ -131,6 +132,7 @@ export class EnterPin
                     }
                     else
                     {
+                        m.unbindKeyboardListener("pinBoxes");
                         console.log(a);
                         dummyAccounts.getInstance().loggedInAccount = a;
                         Menu.load().finally(() => resolve());

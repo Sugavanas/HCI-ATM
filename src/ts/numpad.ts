@@ -6,7 +6,7 @@ export class NumPad{
     private numPadInput;
 
     constructor(private id:string, private title : string, private initialVal : string = "", private min = 0, private max = 100, private isPassword : boolean = false, 
-                private decimal : boolean = false, private allowCents : boolean = false, private closeC? : Function, private autoDestruct : boolean = false,
+                private isDecimal : boolean = false, private allowCents : boolean = false, private closeC? : Function, private autoDestruct : boolean = false,
                 private addC? : Function, private backspaceC? : Function, private clearC? : Function, private confirmC? : Function, private cancelC? : Function)
     { 
         this.modalID = "numPadModal-" + id;
@@ -68,6 +68,10 @@ export class NumPad{
                 var val = $(this).val().toString();
                 if(isPassword)
                     $("#" + instance.modalID).find("#numPadInputMask").val(val.replace(/[\S]/g, "*"));
+                else if(isDecimal && !allowCents)
+                    $("#" + instance.modalID).find("#numPadInputMask").val((isNaN(parseFloat(val)) ? parseFloat("0").toFixed(2) : parseFloat(val).toFixed(2)));
+                else if(isDecimal && allowCents)
+                {alert("need to code this");}
                 else
                     $("#" + instance.modalID).find("#numPadInputMask").val(val);
 

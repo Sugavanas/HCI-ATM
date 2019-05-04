@@ -2,7 +2,7 @@
 //import * as $ from "jquery";
 
 import {Pages} from "./pages";
-
+import {Menu} from "./pages/menu";
 
 $(document).ready(function() {
     Main.initialLoad();
@@ -142,22 +142,30 @@ export class Main {
     static addCancelBtn(callback? : Function)
     {
         if($('#btnBottomCancel').length == 0)
-            $("body").append('<button class="btn btn-danger btnBottomLeft" id="btnBottomCancel">Cancel</button>');
+            $("#content").append('<button class="btn btn-danger btnBottomLeft" id="btnBottomCancel">Cancel</button>');
 
         $('#btnBottomCancel').unbind("click");
 
         Main.addBtnListener("btnBottomCancel", callback); 
     }
     
-    static addDefaultCancelBtn()
+    static addDefaultCancelBtn(page? : string)
     {
         Main.addCancelBtn(function(){
-            Main.showLoader("Quitting?", new Promise(function(resolve, reject) {
-                setTimeout(function(){
-                    Main.initialLoad();
-                    resolve();
-                }, 1000);
-            }));
+            Main.unbindKeyboardListener("");
+
+            if(page == null)
+            {
+                Main.showLoader("Quitting?", new Promise(function(resolve, reject) {
+                    setTimeout(function(){
+                        Main.initialLoad();
+                        resolve();
+                    }, 1000);
+                }));
+            } else if(page == "menu")
+            {
+                Main.showLoader("Cancelling", Menu.load());
+            }
         });
     }
 }

@@ -1,0 +1,17 @@
+<tpl id="tplContent">
+        <style>
+          
+        </style>
+        <div class="container">
+           Name : {{AccountName}}
+           Account Number : {{AccountNumber}}
+
+           Deposit Amount : <input type=text id="inputAmountMask"/>
+           <input type=hidden id="inputAmount"/>
+            
+           <div class="btnDiv">
+                <button class="btn btn-warning" id="clearAmount">Clear</button>
+                <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
+            </div>
+        </div>
+    </tpl>
