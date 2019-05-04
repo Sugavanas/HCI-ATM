@@ -4,6 +4,7 @@ import { s } from './data/s';
 export class NumPad{
     private modalID : string;
     private numPadInput;
+    private binded : boolean = false; //to make sure we are not binded twice.
 
     constructor(private id:string, private title : string, private initialVal : string = "", private min = 0, private max = 100, private isPassword : boolean = false, 
                 private isDecimal : boolean = false, private allowCents : boolean = false, private closeC? : Function, private autoDestruct : boolean = false,
@@ -39,31 +40,7 @@ export class NumPad{
             })
 
             instance.numPadInput =  $("#" + instance.modalID).find("#numPadInput");
-           
-            Main.bindKeyboardListener(id, function(key) {
-                    if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
-                    {
-                        instance.highlightKeysWhileTyping(String.fromCharCode(key));
-                        instance.add(String.fromCharCode(key));
-                    }
-                    else if(key === 8)
-                    instance.backspace()
-                    else if(key === 13)
-                        confirmC();
-                    else if(key === 27)
-                        cancelC();
-                    else
-                    {
-                        $.toast({
-                            text: s.eNumbers,
-                            position: 'bottom-center',
-                            stack: false,
-                            allowToastClose: true
-                        })
-                    }
-            });
 
-        
             instance.numPadInput.on("change", function(){
                 var val = $(this).val().toString();
                 if(isPassword)
@@ -111,20 +88,59 @@ export class NumPad{
         });
     }
 
-    private show()
+    private bindKeyboardListener()
     {
+        var instance = this;
+        if(this.binded)
+            return;
+        
+        this.binded = true;
+        Main.bindKeyboardListener(this.id, function(key) {
+            if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
+            {
+                instance.highlightKeysWhileTyping(String.fromCharCode(key));
+                instance.add(String.fromCharCode(key));
+            }
+            else if(key === 8)
+                instance.backspace()
+            else if(key === 13)
+                instance.confirmC();
+            else if(key === 27)
+                instance.cancelC();
+            else
+            {
+                $.toast({
+                    text: s.eNumbers,
+                    position: 'bottom-center',
+                    stack: false,
+                    allowToastClose: true
+                })
+            }
+        });
+    }
+
+    private unbindKeyboardListener()
+    {
+        Main.unbindKeyboardListener(this.id);
+        this.binded = false;
+    }
+
+    public show()
+    {
+        this.bindKeyboardListener();
         $("#" + this.modalID).modal('show');
     }
 
-    private hide()
+    public hide()
     {
-        $("#" + this.modalID).modal('hide');
+       this.unbindKeyboardListener();
+       this.closeC();
+       $("#" + this.modalID).modal('hide');
     }
 
     private destruct()
     {
-        Main.unbindKeyboardListener(this.id);
-        this.closeC();
+        this.unbindKeyboardListener();
         $("#" + this.modalID).remove();
     }
 
@@ -153,15 +169,15 @@ export class NumPad{
     }
 
     private confirm()
-    {
-        this.confirmC();
+    {   
         this.hide();
+        this.confirmC();
     }
 
     private cancel()
     {
-        this.cancelC();
         this.hide();
+        this.cancelC();
     }
 
     private highlightKeysWhileTyping(val)

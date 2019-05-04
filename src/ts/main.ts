@@ -111,13 +111,13 @@ export class Main {
 
     static bindKeyboardListener(id, callback) : void
     {
-        $(document).on("keypress." + id, function(e) {
+        $(document).off("keypress." + id).on("keypress." + id, function(e) {
             var key = e.which;
             callback(key);
         });
 
         //Make sure backspace doesn't redirect back
-        $(document).on("keydown." + id, function (e) { //TODO combine the if statements
+        $(document).off("keydown." + id).on("keydown." + id, function (e) { //TODO combine the if statements
             if (e.which === 8 && !$(e.target).is("input, textarea")) {
                 e.preventDefault();
                 callback(e.which);
@@ -151,21 +151,26 @@ export class Main {
     
     static addDefaultCancelBtn(page? : string)
     {
-        Main.addCancelBtn(function(){
-            Main.unbindKeyboardListener("");
-
-            if(page == null)
-            {
-                Main.showLoader("Quitting?", new Promise(function(resolve, reject) {
-                    setTimeout(function(){
-                        Main.initialLoad();
-                        resolve();
-                    }, 1000);
-                }));
-            } else if(page == "menu")
-            {
-                Main.showLoader("Cancelling", Menu.load());
-            }
+        Main.addCancelBtn(function() {
+            Main.defaultCancelCallback(page)
         });
+    }
+
+
+    static defaultCancelCallback(page? : string)
+    {
+        Main.unbindKeyboardListener("");
+        if(page == null)
+        {
+            Main.showLoader("Quitting?", new Promise(function(resolve, reject) {
+                setTimeout(function(){
+                    Main.initialLoad();
+                    resolve();
+                }, 1000);
+            }));
+        } else if(page == "menu")
+        {
+            Main.showLoader("Cancelling", Menu.load());
+        }
     }
 }
