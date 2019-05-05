@@ -4,7 +4,7 @@ import { NumPad } from './../numpad'
 import { dummyAccounts, Account, AccountTypes } from './../data/account';
 import { DepositDetails } from './deposit.details';
 import { Pages } from '../pages';
-import { TransferDetails } from './transfer,details';
+import { TransferDetails } from './transfer.details';
 
 export class DepositAccountNumber { //this page is used for both transfer and deposit
     static load(transfer : boolean = false, transferFromAccSelection : AccountTypes = null): Promise<object> {

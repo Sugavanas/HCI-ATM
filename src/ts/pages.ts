@@ -4,7 +4,7 @@ import {EnterPin} from './pages/enterpin';
 import {dummyAccounts, Account, AccountTypes} from './data/account';
 import { Menu } from './pages/menu';
 import { DepositDetails } from './pages/deposit.details';
-import { TransferDetails } from './pages/transfer,details';
+import { TransferDetails } from './pages/transfer.details';
 
 export class Pages { //implements Page {
     static splash() : void
