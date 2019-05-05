@@ -4,4 +4,5 @@ interface JQuery {
 
  interface JQueryStatic {
     toast(options?: any) : any;
+    mustache(template? : any, values? : any) : any;
  }
