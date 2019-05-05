@@ -1,0 +1,21 @@
+<tpl id="tplContent">
+    <style>
+
+    </style>
+    <div class="container">
+        <!-- Show the old amount in a seperate field -->
+        Name : {{toAccountObject.displayName}}
+        Account Number : {{toAccountObject.accNumber}}
+
+        Transfer Amount : <input type=text id="inputAmountMask" />
+        <input type=hidden id="inputAmount" />
+        <input type=hidden id="transferToAccount" value="{{toAccountObjectJSON}}" />
+        <input type=hidden id="transferToAccountType" value="{{toAccountType}}" />
+        <input type=hidden id="transferFromAccount" value="{{fromAccountObjectJSON}}" />
+        <input type=hidden id="transferFromAccountType" value="{{fromAccountType}}" />
+        <div class="btnDiv">
+            <button class="btn btn-warning" id="clearAmount">Clear</button>
+            <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
+        </div>
+    </div>
+</tpl>

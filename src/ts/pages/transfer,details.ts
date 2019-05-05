@@ -4,48 +4,51 @@ import { NumPad } from '../numpad'
 import {dummyAccounts, Account, AccountTypes} from '../data/account';
 import { Pages } from '../pages';
 
-export class DepositDetails {
-    static load(depositAccount : Account, depositAccountSelection : AccountTypes, oldAmount : any = 0) : Promise<object>
+export class TransferDetails {
+    static load(toAccount : Account, toAccountType : AccountTypes, fromAccountType : AccountTypes, oldAmount : any = null) : Promise<object>
     {
-        //Don't need to validate depositAccount as it most probably exists.
         return new Promise(function(resolve, reject){
             
-            m.getAndLoad("deposit.insertamount.html", {"AccountName" : depositAccount.displayName, 
-                                                        "AccountNumber" : depositAccount.accNumber,
-                                                        "AccountObject" : JSON.stringify(depositAccount),
-                                                        "AccountSelection" : JSON.stringify(depositAccountSelection),
-                                                        "OldAmount" : oldAmount})
+            m.getAndLoad("transfer.insertamount.html", { "toAccountObject" : toAccount,
+                                                        "toAccountObjectJSON" : JSON.stringify(toAccount),
+                                                        "toAccountType" : JSON.stringify(toAccountType),
+                                                        "fromAccountType" : JSON.stringify(fromAccountType),
+                                                        "fromAccountObject" : dummyAccounts.getInstance().loggedInAccount()})
             .then(() => {
                 m.addDefaultCancelBtn("menu");
             
-                DepositDetails.bindKeyBoardListener();
+                TransferDetails.bindKeyBoardListener();
 
                 $("#inputAmount").on("change", function() {
                     var val = $("#inputAmount").val().toString();
+                  
+                    if(val.length <= 2)
+                        val = "0" + val;
+                    
+                    val = val.substr(0, val.length - 2) + "." +  val.substr(val.length - 2);
                     var amount = parseFloat(val);
 
                     if(isNaN(amount))
                         amount = 0;
-
+                                        
                     $("#inputAmountMask").val(amount.toFixed(2));
 
-                    if(val.length >= DepositDetails.depsoitAmount.minChar && val.length <= DepositDetails.depsoitAmount.maxChar)
+                    if((val.length - 1) >= TransferDetails.transferAmount.minChar && (val.length - 1) <= TransferDetails.transferAmount.maxChar)
                         $("#confirmAmount").removeAttr("disabled");
                     else
                         $("#confirmAmount").attr("disabled", "true");
         
-                }).trigger("change");
+                }).val(oldAmount).trigger("change");
 
                 m.addBtnListener("inputAmountMask", function() {
-                    m.unbindKeyboardListener("depositAmount");
-                    new NumPad("insertAmountNumPad", "Enter Amount to deposit",  $("#inputAmount").val().toString(), DepositDetails.depsoitAmount.minChar, DepositDetails.depsoitAmount.maxChar, false, true, false, function(){
-                        DepositDetails.bindKeyBoardListener();
-                    }, true, DepositDetails.depsoitAmount.add, DepositDetails.depsoitAmount.backspace, DepositDetails.depsoitAmount.clear, DepositDetails.depsoitAmount.confirm, 
+                    m.unbindKeyboardListener("transferAmount");
+                    new NumPad("insertAmountNumPad", "Enter Amount to transfer",  $("#inputAmount").val().toString(), TransferDetails.transferAmount.minChar, TransferDetails.transferAmount.maxChar, false, true, true, function(){
+                        TransferDetails.bindKeyBoardListener();
+                    }, true, TransferDetails.transferAmount.add, TransferDetails.transferAmount.backspace, TransferDetails.transferAmount.clear, TransferDetails.transferAmount.confirm, 
                     function() { m.defaultCancelCallback("menu"); });
                 });
 
-                m.addBtnListener("confirmAmount", DepositDetails.depsoitAmount.confirm);
-                m.addBtnListener("clearAmount", DepositDetails.depsoitAmount.clear);
+                m.addBtnListener("confirmAmount", TransferDetails.transferAmount.confirm);
                 resolve();
             }).catch(reject);
         });
@@ -53,13 +56,13 @@ export class DepositDetails {
 
     static bindKeyBoardListener()
     {
-        m.bindKeyboardListener("depositAmount", function(key){
+        m.bindKeyboardListener("transferAmount", function(key){
             if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
-                DepositDetails.depsoitAmount.add(String.fromCharCode(key));
+                TransferDetails.transferAmount.add(String.fromCharCode(key));
             else if(key === 8)
-                DepositDetails.depsoitAmount.backspace();
+                TransferDetails.transferAmount.backspace();
             else if(key === 13)
-                DepositDetails.depsoitAmount.confirm();
+                TransferDetails.transferAmount.confirm();
             else
             {
                 $.toast({
@@ -72,15 +75,15 @@ export class DepositDetails {
         });
     }
 
-    static depsoitAmount = class
+    static transferAmount = class
     {
         static minChar = 1;
-        static maxChar = 6;
+        static maxChar = 8;
 
         static add(val) 
         {
-            var amount = $("#inputAmount").val();
-            if(amount.toString().length < DepositDetails.depsoitAmount.maxChar)
+            var amount : string = $("#inputAmount").val().toString();
+            if(amount.length < TransferDetails.transferAmount.maxChar)
             {
                 $("#inputAmount").val(amount + val).trigger("change");
             }
@@ -109,21 +112,18 @@ export class DepositDetails {
         static confirm()
         {
             var val = $("#inputAmount").val().toString();
-            let account : Account = JSON.parse($("#depositAccountNumber").val().toString());
-            let accountSelection : AccountTypes = JSON.parse($("#depositAccountSelection").val().toString());
-            if(val.length >= DepositDetails.depsoitAmount.minChar && val.length <= DepositDetails.depsoitAmount.maxChar)
+            let toAccount : Account = JSON.parse($("#transferToAccount").val().toString());
+            let toAccountType : AccountTypes = JSON.parse($("#transferToAccountType").val().toString());            
+            let fromAccountType : AccountTypes = JSON.parse($("#transferFromAccountType").val().toString());
+            if(val.length >= TransferDetails.transferAmount.minChar && val.length <= TransferDetails.transferAmount.maxChar)
             {
-                var total = parseInt(val);
-                if($("#depositOldAmount").length)
-                {
-                    var oldAmount =$("#depositOldAmount").val().toString();
-                    total += parseInt(oldAmount);
-                }   
+
+                var total = parseFloat((val.substr(0, val.length - 2) + "." +  val.substr(val.length - 2)));
 
                 if(total < 1000000)
                 {
-                    m.unbindKeyboardListener("depositAmount");
-                    m.showLoader("Processing", Pages.depositConfirm(account, accountSelection, total.toString()));
+                    m.unbindKeyboardListener("transferAmount");
+                    m.showLoader("Processing", Pages.transferConfirm(toAccount, toAccountType, fromAccountType, total.toString()));
                 }
                 else
                 {

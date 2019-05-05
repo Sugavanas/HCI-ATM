@@ -4,8 +4,9 @@ import { NumPad } from './../numpad'
 import { dummyAccounts, Account, AccountTypes } from './../data/account';
 import { DepositDetails } from './deposit.details';
 import { Pages } from '../pages';
+import { TransferDetails } from './transfer,details';
 
-export class DepositAccountNumber {
+export class DepositAccountNumber { //this page is used for both transfer and deposit
     static load(transfer : boolean = false, transferFromAccSelection : AccountTypes = null): Promise<object> {
         return new Promise(function (resolve, reject) {
            m.getAndLoad("deposit.accountnumber.html", 
@@ -123,7 +124,6 @@ export class DepositAccountNumber {
                 if(accountNumber.length >= DepositAccountNumber.accountNumber.maxChar)
                 {
                     let a : number = dummyAccounts.getInstance().getAccountByNumber(accountNumber);
-                    console.log
                     if(a == -1)
                     {
                         //show error
@@ -138,7 +138,12 @@ export class DepositAccountNumber {
                         m.unbindKeyboardListener("accountNumberBoxes");
                         let account : Account = dummyAccounts.getInstance().getAccount(a);
                         Pages.accountSelection(account).then(data => {
-                            DepositDetails.load(account, data, transfer, transferFromAccSelection).finally(resolve);
+
+                            if(transfer)
+                                TransferDetails.load(account, data, transferFromAccSelection).finally(resolve);
+                            else
+                                DepositDetails.load(account, data).finally(resolve);
+
                         }).catch(() => {
                             DepositAccountNumber.bindKeyboardListener();
                             $("#error").html("Please try again.").css("display", "block");

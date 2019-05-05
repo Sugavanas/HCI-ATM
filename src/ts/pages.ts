@@ -4,6 +4,7 @@ import {EnterPin} from './pages/enterpin';
 import {dummyAccounts, Account, AccountTypes} from './data/account';
 import { Menu } from './pages/menu';
 import { DepositDetails } from './pages/deposit.details';
+import { TransferDetails } from './pages/transfer,details';
 
 export class Pages { //implements Page {
     static splash() : void
@@ -23,7 +24,7 @@ export class Pages { //implements Page {
             });
     }
 
-    static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, transfer : boolean, transferFromAccSelection : AccountTypes, depositAmount : string) : Promise<object>
+    static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, depositAmount : string) : Promise<object>
     {
         var intDepositAmount = parseInt(depositAmount);
         var n100, n50, n20, n10, n5, n1;
@@ -55,12 +56,8 @@ export class Pages { //implements Page {
             .then(() => {
                 m.addDefaultCancelBtn("menu");
 
-                if(transfer) //if transfer change button to edit amount
-                    $("#addCash").html("Edit Amount");
-                
-               
                 m.addBtnListener("addCash", function() {
-                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, transfer, transferFromAccSelection, depositAmount));
+                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, depositAmount));
                 });
                 
                 m.addBtnListener("confirmTransaction", function() {
@@ -69,10 +66,7 @@ export class Pages { //implements Page {
                         dummyAccounts.getInstance().addToBalance(depositAccount, depositAccountSelection, parseFloat(depositAmount));
 
                         //For Debugging
-                        if(transfer)
-                            console.log("Transfer", transferFromAccSelection, depositAccount.accNumber, depositAccountSelection, depositAmount);
-                        else
-                            console.log("Deposit", depositAccount.accNumber, depositAccountSelection, depositAmount);
+                        console.log("Deposit", depositAccount.accNumber, depositAccountSelection, depositAmount);
                         
                         Pages.takeReceipt().then(resolve).catch(reject);
                     }));
@@ -80,6 +74,41 @@ export class Pages { //implements Page {
 
                 if(parseInt(depositAmount) >= 999999)
                     $("#addCash").attr("disabled", "true");
+
+                resolve();
+            }).catch(reject);
+        });
+    }
+
+    static transferConfirm(toAccount : Account, toAccountType : AccountTypes, fromAccountType : AccountTypes, trasnferAmount : string) : Promise<object>
+    {
+        let fromAccount : Account = dummyAccounts.getInstance().loggedInAccount();
+        return new Promise(function(resolve, reject){
+            m.getAndLoad("transfer.confirm.html", {"AccountName" : toAccount.displayName, 
+                                                "AccountNumber" : toAccount.accNumber, 
+                                                "trasnferAmount" : trasnferAmount})
+            .then(() => {
+                m.addDefaultCancelBtn("menu");
+
+                m.addBtnListener("editAmount", function() {
+                    m.showLoader("Loading", TransferDetails.load(toAccount, toAccountType, fromAccountType, trasnferAmount));
+                });
+                
+                m.addBtnListener("confirmTransaction", function() {
+                    m.showLoader("Processing", new Promise(function(resolve, reject) {
+
+                        dummyAccounts.getInstance().addToBalance(toAccount, toAccountType, parseFloat(trasnferAmount));
+                        dummyAccounts.getInstance().addToBalance(fromAccount, fromAccountType, -parseFloat(trasnferAmount));
+
+                        //For Debugging
+                        console.log("Transfer", toAccount.accNumber, toAccountType, fromAccount.accNumber, fromAccountType, trasnferAmount);
+                        
+                        Pages.takeReceipt().then(resolve).catch(reject);
+                    }));
+                });
+
+                if(parseInt(trasnferAmount) >= 999999)
+                    $("#editAmount").attr("disabled", "true");
 
                 resolve();
             }).catch(reject);

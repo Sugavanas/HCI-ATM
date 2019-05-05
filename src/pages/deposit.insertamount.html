@@ -3,8 +3,6 @@
 
     </style>
     <div class="container">
-        {{#transfer}} Transfer {{/transfer}}
-        {{^transfer}} Deposit {{/transfer}}
         <!-- Show the old amount in a seperate field -->
         {{#OldAmount}} Add Cash {{/OldAmount}}
         {{^OldAmount}} Insert Cash {{/OldAmount}}
@@ -15,8 +13,6 @@
         <input type=hidden id="inputAmount" />
         <input type=hidden id="depositAccountNumber" value="{{AccountObject}}" />
         <input type=hidden id="depositAccountSelection" value="{{AccountSelection}}" />
-        <input type=hidden id="depositOrTransfer" value="{{transfer}}" />
-        <input type=hidden id="transferFromAccSelection" value="{{transferFromAccSelection}}" />
         {{#OldAmount}}<input type=hidden id="depositOldAmount" value="{{OldAmount}}" /> {{/OldAmount}}
         <div class="btnDiv">
             <button class="btn btn-warning" id="clearAmount">Clear</button>
