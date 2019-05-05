@@ -5,6 +5,7 @@ export class NumPad{
     private modalID : string;
     private numPadInput;
     private binded : boolean = false; //to make sure we are not binded twice.
+    private onScreen : boolean = false;
 
     constructor(private id:string, private title : string, private initialVal : string = "", private min = 0, private max = 100, private isPassword : boolean = false, 
                 private isDecimal : boolean = false, private allowCents : boolean = false, private closeC? : Function, private autoDestruct : boolean = false,
@@ -49,7 +50,10 @@ export class NumPad{
                 else if(isDecimal && !allowCents)
                     $("#" + instance.modalID).find("#numPadInputMask").val((isNaN(parseFloat(val)) ? parseFloat("0").toFixed(2) : parseFloat(val).toFixed(2)));
                 else if(isDecimal && allowCents)
-                {alert("need to code this");}
+                {
+                    var amount = parseFloat(("00" + val).substr(0, val.length + 2 - 2) + "." +  ("00" + val).substr(val.length + 2 - 2));
+                    $("#" + instance.modalID).find("#numPadInputMask").val((isNaN(amount) ? parseFloat("0").toFixed(2) : amount.toFixed(2)));
+                }
                 else
                     $("#" + instance.modalID).find("#numPadInputMask").val(val);
 
@@ -128,15 +132,21 @@ export class NumPad{
 
     public show()
     {
+        this.onScreen = true;
         this.bindKeyboardListener();
         $("#" + this.modalID).modal('show');
     }
 
     public hide()
     {
-       this.unbindKeyboardListener();
-       this.closeC();
-       $("#" + this.modalID).modal('hide');
+        //Make sure hide doesn't fire more than once
+        if(!this.onScreen)
+            return;
+
+        this.unbindKeyboardListener();
+        this.closeC();
+        $("#" + this.modalID).modal('hide');
+        this.onScreen = false;
     }
 
     private destruct()
@@ -177,6 +187,7 @@ export class NumPad{
 
     private cancel()
     {
+        $("#" + this.modalID).off('hidden.bs.modal')
         this.hide();
         this.cancelC();
     }
