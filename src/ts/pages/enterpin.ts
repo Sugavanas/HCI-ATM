@@ -61,7 +61,7 @@ export class EnterPin
     static cancel() : void
     {
         m.unbindKeyboardListener("pinBoxes");
-        m.initialLoad();
+        m.defaultCancelCallback();
     }
 
     static bindKeyboardListener() : void
@@ -120,8 +120,8 @@ export class EnterPin
                 var pin : string =  $("#pinNumber").val().toString();
                 if(pin.length >= EnterPin.pinNumber.maxChar)
                 {
-                    let a : Account = dummyAccounts.getInstance().getAccountByPin(pin);
-                    if(a == null)
+                    let a : number = dummyAccounts.getInstance().getAccountByPin(pin);
+                    if(a == -1)
                     {
                         //show error
                         setTimeout(() => {
@@ -134,7 +134,7 @@ export class EnterPin
                     {
                         m.unbindKeyboardListener("pinBoxes");
                         console.log(a);
-                        dummyAccounts.getInstance().loggedInAccount = a;
+                        dummyAccounts.getInstance().loggedInAccount(a);
                         Menu.load().finally(() => resolve());
                     }
                     

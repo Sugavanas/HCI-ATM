@@ -1,17 +1,26 @@
 <tpl id="tplContent">
-        <style>
-          
-        </style>
-        <div class="container">
-           Name : {{AccountName}}
-           Account Number : {{AccountNumber}}
+    <style>
 
-           Deposit Amount : <input type=text id="inputAmountMask"/>
-           <input type=hidden id="inputAmount"/>
-            
-           <div class="btnDiv">
-                <button class="btn btn-warning" id="clearAmount">Clear</button>
-                <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
-            </div>
+    </style>
+    <div class="container">
+        {{#transfer}} Transfer {{/transfer}}
+        {{^transfer}} Deposit {{/transfer}}
+        <!-- Show the old amount in a seperate field -->
+        {{#OldAmount}} Add Cash {{/OldAmount}}
+        {{^OldAmount}} Insert Cash {{/OldAmount}}
+        Name : {{AccountName}}
+        Account Number : {{AccountNumber}}
+
+        Deposit Amount : <input type=text id="inputAmountMask" />
+        <input type=hidden id="inputAmount" />
+        <input type=hidden id="depositAccountNumber" value="{{AccountObject}}" />
+        <input type=hidden id="depositAccountSelection" value="{{AccountSelection}}" />
+        <input type=hidden id="depositOrTransfer" value="{{transfer}}" />
+        <input type=hidden id="transferFromAccSelection" value="{{transferFromAccSelection}}" />
+        {{#OldAmount}}<input type=hidden id="depositOldAmount" value="{{OldAmount}}" /> {{/OldAmount}}
+        <div class="btnDiv">
+            <button class="btn btn-warning" id="clearAmount">Clear</button>
+            <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
         </div>
-    </tpl>
+    </div>
+</tpl>

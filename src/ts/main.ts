@@ -102,7 +102,7 @@ export class Main {
         let btn = $("#" + id);
         console.log(btn);
         if(btn != null)
-            btn.on("click", function(){
+            btn.off("click").on("click", function(){
                 callback(params)
             });
         else

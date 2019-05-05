@@ -1,0 +1,51 @@
+<tpl id="tplContent">
+        <style>
+          .accountNumberBoxes{
+              /*top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              position: absolute;*/
+              text-align: center;
+              margin: 30px 0;    
+          }
+    
+         .accountNumberBoxes:hover > .accountNumberBox,  .accountNumberBoxes.focus > .accountNumberBox{
+            background: rgba(109, 109, 109, 0.5);
+          }
+          
+          .accountNumberBox{
+            height: 40px;
+            width: 30px;
+            display: inline-block;
+            background: rgba(25,25,25, 0.5);
+            vertical-align: top;
+            line-height: 40px;
+          }
+        </style>
+    
+        <div class="pageContent">
+            <div class="title text-center">Enter Account Number</div>
+            
+            <div class="alert alert-danger" id="error" role="alert" style="display:none;">
+                    
+            </div>
+    
+            <div class="accountNumberBoxes" id="accountNumberBoxes">
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+                <div class="accountNumberBox"></div>
+            </div>
+            <input type="hidden" id="accountNumber"/>
+            <input type=hidden id="depositOrTransfer" value="{{transfer}}" />
+            <div class="btnDiv">
+                <button class="btn btn-warning" id="clearAccountNo">Clear</button>
+                <button class="btn btn-success" id="confirmAccountNo" disabled>Confirm</button>
+            </div>
+        </div>
+    </tpl>
