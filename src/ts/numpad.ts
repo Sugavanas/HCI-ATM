@@ -36,6 +36,7 @@ export class NumPad{
 
             //remove modal code from body when it goes off screen.
             $("#" + instance.modalID).on('hidden.bs.modal', function () {
+                instance.hide();
                 instance.destruct();
             })
 
@@ -95,7 +96,7 @@ export class NumPad{
             return;
         
         this.binded = true;
-        Main.bindKeyboardListener(this.id, function(key) {
+        Main.bindKeyboardListener(this.modalID, function(key) {
             if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
             {
                 instance.highlightKeysWhileTyping(String.fromCharCode(key));
@@ -121,7 +122,7 @@ export class NumPad{
 
     private unbindKeyboardListener()
     {
-        Main.unbindKeyboardListener(this.id);
+        Main.unbindKeyboardListener(this.modalID);
         this.binded = false;
     }
 
