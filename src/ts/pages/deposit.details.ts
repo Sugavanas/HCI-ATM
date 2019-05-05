@@ -116,7 +116,7 @@ export class DepositDetails {
             let account : Account = JSON.parse($("#depositAccountNumber").val().toString());
             let accountSelection : AccountTypes = JSON.parse($("#depositAccountSelection").val().toString());
             let transfer : boolean = ($("#depositOrTransfer").val().toString() == "true");
-            let transferFromAccSelection : Account =  (transfer ? JSON.parse($("#transferFromAccSelection").val().toString()) : null);
+            let transferFromAccSelection : AccountTypes =  (transfer ? JSON.parse($("#transferFromAccSelection").val().toString()) : null);
             if(val.length >= DepositDetails.depsoitAmount.minChar && val.length <= DepositDetails.depsoitAmount.maxChar)
             {
                 var total = parseInt(val);
@@ -128,8 +128,22 @@ export class DepositDetails {
 
                 if(total < 1000000)
                 {
-                    m.unbindKeyboardListener("depositAmount");
-                    m.showLoader("Processing", Pages.depositConfirm(account, accountSelection, transfer, total.toString()));
+                    if(transfer && ( 
+                        (transferFromAccSelection == AccountTypes.Savings && dummyAccounts.getInstance().loggedInAccount().savingAccountBalance < total) ||
+                        (transferFromAccSelection == AccountTypes.Current && dummyAccounts.getInstance().loggedInAccount().currentAccountBalance < total)))
+                    {
+                        $.toast({
+                            text: s.lowBalance,
+                            position: 'bottom-center',
+                            stack: false,
+                            allowToastClose: true
+                        });
+                    }
+                    else 
+                    {
+                        m.unbindKeyboardListener("depositAmount");
+                        m.showLoader("Processing", Pages.depositConfirm(account, accountSelection, transfer, transferFromAccSelection, total.toString()));
+                    }
                 }
                 else
                 {

@@ -3,6 +3,7 @@ export class s {
     static readonly maxChars : string = "Reached max allowed characters";
     static readonly maxAmount : string = "Only RM 999,999 deposit is allowed per transaction. Please try again.";
     static readonly unexpected : string = "Unexpected Error. Please try again.";
+    static readonly lowBalance : string = "You do not have enough balance. Your balance is ";
     
     static readonly transactionSuccess : string = "Transaction Successful.";
     static readonly transactionFailed : string = "Transaction Failed.";

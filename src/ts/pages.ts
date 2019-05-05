@@ -23,7 +23,7 @@ export class Pages { //implements Page {
             });
     }
 
-    static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, transfer : boolean, depositAmount : string) : Promise<object>
+    static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, transfer : boolean, transferFromAccSelection : AccountTypes, depositAmount : string) : Promise<object>
     {
         var intDepositAmount = parseInt(depositAmount);
         var n100, n50, n20, n10, n5, n1;
@@ -60,14 +60,20 @@ export class Pages { //implements Page {
                 
                
                 m.addBtnListener("addCash", function() {
-                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, transfer, depositAmount));
+                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, transfer, transferFromAccSelection, depositAmount));
                 });
                 
-
-
                 m.addBtnListener("confirmTransaction", function() {
                     m.showLoader("Processing", new Promise(function(resolve, reject) {
+
                         dummyAccounts.getInstance().addToBalance(depositAccount, depositAccountSelection, parseFloat(depositAmount));
+
+                        //For Debugging
+                        if(transfer)
+                            console.log("Transfer", transferFromAccSelection, depositAccount.accNumber, depositAccountSelection, depositAmount);
+                        else
+                            console.log("Deposit", depositAccount.accNumber, depositAccountSelection, depositAmount);
+                        
                         Pages.takeReceipt().then(resolve).catch(reject);
                     }));
                 });

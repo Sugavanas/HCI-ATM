@@ -21,7 +21,11 @@ export class Menu {
                 });
 
                 m.addBtnListener("menu-transfer", function() {
-                    m.showLoader("Loading", DepositAccountNumber.load(true)); 
+                    Pages.accountSelection(dummyAccounts.getInstance().loggedInAccount()).then(
+                        data => {
+                            m.showLoader("Loading", DepositAccountNumber.load(true, data)); 
+                        });
+                   
                 });
                 resolve();
             }).catch(reject);

@@ -6,10 +6,11 @@ import { DepositDetails } from './deposit.details';
 import { Pages } from '../pages';
 
 export class DepositAccountNumber {
-    static load(transfer : boolean = false): Promise<object> {
+    static load(transfer : boolean = false, transferFromAccSelection : AccountTypes = null): Promise<object> {
         return new Promise(function (resolve, reject) {
            m.getAndLoad("deposit.accountnumber.html", 
-                        {transfer : transfer})
+                        {"transfer" : transfer,
+                        "transferFromAccSelection" : JSON.stringify(transferFromAccSelection)})
            .then(() => {
                 DepositAccountNumber.bindKeyboardListener();
 
@@ -118,6 +119,7 @@ export class DepositAccountNumber {
             m.showLoader("Processing", new Promise(function(resolve, reject) {
                 var accountNumber : string =  $("#accountNumber").val().toString();
                 let transfer : boolean = ($("#depositOrTransfer").val().toString() == "true");
+                let transferFromAccSelection : AccountTypes =  (transfer ? JSON.parse($("#transferFromAccSelection").val().toString()) : null);
                 if(accountNumber.length >= DepositAccountNumber.accountNumber.maxChar)
                 {
                     let a : number = dummyAccounts.getInstance().getAccountByNumber(accountNumber);
@@ -136,7 +138,7 @@ export class DepositAccountNumber {
                         m.unbindKeyboardListener("accountNumberBoxes");
                         let account : Account = dummyAccounts.getInstance().getAccount(a);
                         Pages.accountSelection(account).then(data => {
-                            DepositDetails.load(account, data, transfer).finally(resolve);
+                            DepositDetails.load(account, data, transfer, transferFromAccSelection).finally(resolve);
                         }).catch(() => {
                             DepositAccountNumber.bindKeyboardListener();
                             $("#error").html("Please try again.").css("display", "block");
