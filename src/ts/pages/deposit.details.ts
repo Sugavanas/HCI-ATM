@@ -11,7 +11,7 @@ export class DepositDetails {
         return new Promise(function(resolve, reject){
             
             m.getAndLoad("deposit.insertamount.html", {"AccountName" : depositAccount.displayName, 
-                                                        "AccountNumber" : depositAccount.accNumber,
+                                                        "AccountNumber" : dummyAccounts.i().getAccountNumberByType(depositAccount, depositAccountSelection),
                                                         "AccountObject" : JSON.stringify(depositAccount),
                                                         "AccountSelection" : JSON.stringify(depositAccountSelection),
                                                         "OldAmount" : oldAmount})

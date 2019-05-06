@@ -13,7 +13,7 @@ export class TransferDetails {
                                                         "toAccountObjectJSON" : JSON.stringify(toAccount),
                                                         "toAccountType" : JSON.stringify(toAccountType),
                                                         "fromAccountType" : JSON.stringify(fromAccountType),
-                                                        "fromAccountObject" : dummyAccounts.getInstance().loggedInAccount()})
+                                                        "fromAccountObject" : dummyAccounts.i().loggedInAccount()})
             .then(() => {
                 m.addDefaultCancelBtn("menu");
             
@@ -123,7 +123,7 @@ export class TransferDetails {
 
                 if(total < 1000000)
                 {
-                    if(total <= dummyAccounts.getInstance().getAccountBalance(fromAccountType))
+                    if(total <= dummyAccounts.i().getAccountBalance(fromAccountType))
                     {
                         m.unbindKeyboardListener("transferAmount");
                         m.showLoader("Processing", Pages.transferConfirm(toAccount, toAccountType, fromAccountType, total.toString()));

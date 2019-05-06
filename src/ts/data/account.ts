@@ -17,14 +17,14 @@ export class dummyAccounts {
     }
 
     //just a dummy function
-    getAccountByPin(pin: string) : number 
+    public getAccountByPin(pin: string) : number 
     {
         return this.accounts.findIndex(a => a.pinCode === pin);
     }
 
-    getAccountByNumber(accNumber: string) : number 
+    public getAccountByNumber(accNumber: string) : number 
     {
-        return this.accounts.findIndex(a => a.accNumber === accNumber);
+        return this.accounts.findIndex(a => (a.accNumberSavings === accNumber || a.accNumberCurrent === accNumber));
     }
 
     public loggedInAccount(setAccountIndex? : number): Account 
@@ -44,9 +44,9 @@ export class dummyAccounts {
     }
 
     //A shit way to update, but it works :))
-    updateAccount(newAccount: Account) 
+    public updateAccount(newAccount: Account) 
     {
-        let index = this.accounts.findIndex(a => a.accNumber === newAccount.accNumber);
+        let index = this.getAccountByPin(newAccount.pinCode);
 
         this.accounts[index] = newAccount;
 
@@ -54,7 +54,7 @@ export class dummyAccounts {
         console.log("Updated Accounts", this.accounts);
     }
 
-    addToBalance(account: Account, accSelection: AccountTypes, amount: number) 
+    public addToBalance(account: Account, accSelection: AccountTypes, amount: number) 
     {
         console.log(amount, accSelection, account);
         if (accSelection == AccountTypes.Current)
@@ -65,12 +65,12 @@ export class dummyAccounts {
         this.updateAccount(account);
     }
 
-    getAccount(index : number) : Account
+    public getAccount(index : number) : Account
     {
         return this.accounts[index];
     }
 
-    getAccountBalance(accSelection : AccountTypes, account? : Account, ) : number
+    public getAccountBalance(accSelection : AccountTypes, account? : Account, ) : number
     {
         if(!account)
             account = this.loggedInAccount();
@@ -80,17 +80,22 @@ export class dummyAccounts {
             return account.savingAccountBalance;
     }
 
-    static getInstance(): dummyAccounts 
+    public getAccountNumberByType(a : Account, accSelection : AccountTypes) : string
     {
-        return (dummyAccounts.instance == null ? dummyAccounts.instance = new dummyAccounts() : dummyAccounts.instance);
+        if(accSelection = AccountTypes.Current)
+            return a.accNumberCurrent;
+        else
+            return a.accNumberSavings;
     }
 
-    static isLoggedIn(): boolean 
+    public getTypeByAccountNumber(accountNumber : string) : AccountTypes
     {
-        if (dummyAccounts.getInstance().loggedInAccount != null)
-            return true;
+        let account : Account = this.accounts[this.getAccountByNumber(accountNumber)];
 
-        return false;
+        if(account.accNumberSavings === accountNumber)
+            return AccountTypes.Savings;
+        else
+            return AccountTypes.Current;
     }
 
     private save() : void
@@ -105,10 +110,10 @@ export class dummyAccounts {
         else
         {
             console.log("created");
-            this.accounts.push(new Account(true, "123456", "987654321", "John Doe", "John", true, 5890.96, true, 50000.25));
-            this.accounts.push(new Account(true, "654321", "123456789", "Jane Doe", "Jane", true, 10000.00, false, 0));
-            this.accounts.push(new Account(true, "111111", "111111111", "Baby Doe", "Baby", false, 0, true, 25512.12));
-            this.accounts.push(new Account(true, "222222", "222222222", "Johnny Doe", "Johnny", true, 24521.21, true, 84115.08));
+            this.accounts.push(new Account(true, "123456", "John Doe", "John", true, "123456789", 5890.96, true, "123456788", 50000.25));
+            this.accounts.push(new Account(true, "654321",  "Jane Doe", "Jane", true, "987654321", 10000.00, false, "", 0));
+            this.accounts.push(new Account(true, "111111", "Baby Doe", "Baby", false, "", 0, true, "111111111", 25512.12));
+            this.accounts.push(new Account(true, "222222", "Johnny Doe", "Johnny", true, "222222222", 24521.21, true, "222222223", 84115.08));
             this.save();
         }
     }
@@ -118,19 +123,30 @@ export class dummyAccounts {
         localStorage.clear();
         location.reload();
     }
+
+    static i(): dummyAccounts 
+    {
+        return (dummyAccounts.instance == null ? dummyAccounts.instance = new dummyAccounts() : dummyAccounts.instance);
+    }
+
+    static isLoggedIn(): boolean 
+    {
+        return (dummyAccounts.i().loggedInAccountIndex != null)
+    }
 }
 
 export class Account {
     constructor(public hasCard: boolean,
         public pinCode: string,
-        public accNumber: string,
 
         public fullName: string,//displayed for transfer and etc
         public displayName: string,
 
         public hasSavingsAccount: boolean,
+        public accNumberSavings: string,
         public savingAccountBalance: number,
         public hasCurrentAccount: boolean,
+        public accNumberCurrent: string,
         public currentAccountBalance: number
         ) {
 

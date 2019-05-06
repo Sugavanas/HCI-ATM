@@ -121,7 +121,7 @@ export class CardlessLogin { //this page is used for both transfer and deposit
                 var accountNumber : string =  $("#accountNumber").val().toString();
                 if(accountNumber.length >= CardlessLogin.accountNumber.maxChar)
                 {
-                    let a : number = dummyAccounts.getInstance().getAccountByNumber(accountNumber);
+                    let a : number = dummyAccounts.i().getAccountByNumber(accountNumber);
                     if(a == -1)
                     {
                         //show error

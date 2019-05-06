@@ -127,14 +127,14 @@ export class EnterPin
                     {
                         console.log("account to login");
                         //Not the best coding practice, but saves time.
-                        a = dummyAccounts.getInstance().getAccountByNumber($("#AccountToLogin").val().toString());
-                        if(a == -1 || pin !== dummyAccounts.getInstance().getAccount(a).pinCode)
+                        a = dummyAccounts.i().getAccountByNumber($("#AccountToLogin").val().toString());
+                        if(a == -1 || pin !== dummyAccounts.i().getAccount(a).pinCode)
                             a = -1;
                         else
-                            dummyAccounts.getInstance().loggedInByCard = false;
+                            dummyAccounts.i().loggedInByCard = false;
                     }
                     else
-                        a = dummyAccounts.getInstance().getAccountByPin(pin);
+                        a = dummyAccounts.i().getAccountByPin(pin);
                     
                     if(a == -1)
                     {
@@ -149,7 +149,7 @@ export class EnterPin
                     {
                         m.unbindKeyboardListener("pinBoxes");
                         console.log(a);
-                        dummyAccounts.getInstance().loggedInAccount(a);
+                        dummyAccounts.i().loggedInAccount(a);
                         Menu.load().finally(() => resolve());
                     }
                     

@@ -4,12 +4,14 @@
     </style>
     <div class="container">
         <div class="Info">
-            {{Message}}
+            {{#hasReceipt}}{{takeReceiptMessage}}{{/hasReceipt}}
         </div>
-        Do you want to continue?
-        <div class="btnDiv">
-            <button class="btn btn-success" id="resultNo">No</button>
-            <button class="btn btn-success" id="resultYes">Yes</button>
-        </div>
+        {{#isLoggedin}}
+            Do you want to continue?
+            <div class="btnDiv">
+                <button class="btn btn-success" id="resultNo">No</button>
+                <button class="btn btn-success" id="resultYes">Yes</button>
+            </div>
+        {{/isLoggedin}}
     </div>
 </tpl>

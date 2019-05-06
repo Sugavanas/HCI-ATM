@@ -123,7 +123,7 @@ export class DepositAccountNumber { //this page is used for both transfer and de
                 let transferFromAccSelection : AccountTypes =  (transfer ? JSON.parse($("#transferFromAccSelection").val().toString()) : null);
                 if(accountNumber.length >= DepositAccountNumber.accountNumber.maxChar)
                 {
-                    let a : number = dummyAccounts.getInstance().getAccountByNumber(accountNumber);
+                    let a : number = dummyAccounts.i().getAccountByNumber(accountNumber);
                     if(a == -1)
                     {
                         //show error
@@ -136,19 +136,12 @@ export class DepositAccountNumber { //this page is used for both transfer and de
                     else
                     {
                         m.unbindKeyboardListener("accountNumberBoxes");
-                        let account : Account = dummyAccounts.getInstance().getAccount(a);
-                        Pages.accountSelection(account).then(data => {
-
-                            if(transfer)
-                                TransferDetails.load(account, data, transferFromAccSelection).finally(resolve);
-                            else
-                                DepositDetails.load(account, data).finally(resolve);
-
-                        }).catch(() => {
-                            DepositAccountNumber.bindKeyboardListener();
-                            $("#error").html("Please try again.").css("display", "block");
-                            resolve();
-                        });                    
+                        let account : Account = dummyAccounts.i().getAccount(a);
+                    
+                        if(transfer)
+                            TransferDetails.load(account, dummyAccounts.i().getTypeByAccountNumber(accountNumber), transferFromAccSelection).finally(resolve);
+                        else
+                            DepositDetails.load(account, dummyAccounts.i().getTypeByAccountNumber(accountNumber)).finally(resolve);  
                     }
                 }
             }));

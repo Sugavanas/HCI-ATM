@@ -22,7 +22,7 @@ export class Pages { //implements Page {
                     m.showLoader("Loading", EnterPin.load());
                 });    
                 m.addBtnListener("clearData", function(){
-                    dummyAccounts.getInstance().clear();
+                    dummyAccounts.i().clear();
                 });    
                 m.addBtnListener("touchOverlay", function() {
                     Pages.cardlessModal().then(data => {
@@ -32,6 +32,8 @@ export class Pages { //implements Page {
                             m.showLoader("Loading", CardlessLogin.load());   
                     }).catch(() => {});
                 });
+
+                console.log(dummyAccounts.isLoggedIn());
             })
             .catch(error => {
                 m.loadErrorPage(error);
@@ -97,6 +99,7 @@ export class Pages { //implements Page {
             }).catch(error => { Main.loadErrorPage(error); reject(); })
         });
     }
+
     static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, depositAmount : string) : Promise<object>
     {
         var intDepositAmount = parseInt(depositAmount);
@@ -117,7 +120,7 @@ export class Pages { //implements Page {
 
         return new Promise(function(resolve, reject){
             m.getAndLoad("deposit.confirm.html", {"AccountName" : depositAccount.displayName, 
-                                                "AccountNumber" : depositAccount.accNumber, 
+                                                "AccountNumber" : dummyAccounts.i().getAccountNumberByType(depositAccount, depositAccountSelection), 
                                                 "AccountObject" : JSON.stringify(depositAccount), 
                                                 "depositTotal" : depositAmount, 
                                                 "n100" : n100,
@@ -136,12 +139,12 @@ export class Pages { //implements Page {
                 m.addBtnListener("confirmTransaction", function() {
                     m.showLoader("Processing", new Promise(function(resolve, reject) {
 
-                        dummyAccounts.getInstance().addToBalance(depositAccount, depositAccountSelection, parseFloat(depositAmount));
+                        dummyAccounts.i().addToBalance(depositAccount, depositAccountSelection, parseFloat(depositAmount));
 
                         //For Debugging
-                        console.log("Deposit", depositAccount.accNumber, depositAccountSelection, depositAmount);
+                        console.log("Deposit", dummyAccounts.i().getAccountNumberByType(depositAccount, depositAccountSelection), depositAccountSelection, depositAmount);
                         
-                        Pages.takeReceipt().then(resolve).catch(reject);
+                        Pages.takeReceiptPage().then(resolve).catch(reject);
                     }));
                 });
 
@@ -155,10 +158,10 @@ export class Pages { //implements Page {
 
     static transferConfirm(toAccount : Account, toAccountType : AccountTypes, fromAccountType : AccountTypes, trasnferAmount : string) : Promise<object>
     {
-        let fromAccount : Account = dummyAccounts.getInstance().loggedInAccount();
+        let fromAccount : Account = dummyAccounts.i().loggedInAccount();
         return new Promise(function(resolve, reject){
             m.getAndLoad("transfer.confirm.html", {"AccountName" : toAccount.displayName, 
-                                                "AccountNumber" : toAccount.accNumber, 
+                                                "AccountNumber" : dummyAccounts.i().getAccountNumberByType(toAccount, toAccountType), 
                                                 "trasnferAmount" : trasnferAmount})
             .then(() => {
                 m.addDefaultCancelBtn("menu");
@@ -170,13 +173,13 @@ export class Pages { //implements Page {
                 m.addBtnListener("confirmTransaction", function() {
                     m.showLoader("Processing", new Promise(function(resolve, reject) {
 
-                        dummyAccounts.getInstance().addToBalance(toAccount, toAccountType, parseFloat(trasnferAmount));
-                        dummyAccounts.getInstance().addToBalance(fromAccount, fromAccountType, -parseFloat(trasnferAmount));
+                        dummyAccounts.i().addToBalance(toAccount, toAccountType, parseFloat(trasnferAmount));
+                        dummyAccounts.i().addToBalance(fromAccount, fromAccountType, -parseFloat(trasnferAmount));
 
                         //For Debugging
-                        console.log("Transfer", toAccount.accNumber, toAccountType, fromAccount.accNumber, fromAccountType, trasnferAmount);
+                        console.log("Transfer",  dummyAccounts.i().getAccountNumberByType(toAccount, toAccountType), toAccountType, dummyAccounts.i().getAccountNumberByType(fromAccount, fromAccountType), fromAccountType, trasnferAmount);
                         
-                        Pages.takeReceipt().then(resolve).catch(reject);
+                        Pages.takeReceiptPage().then(resolve).catch(reject);
                     }));
                 });
 
@@ -190,16 +193,16 @@ export class Pages { //implements Page {
 
     static withdrawConfirmation(accountType : AccountTypes, withdrawAmount : string) : Promise<object>
     {
-        let fromAccount : Account = dummyAccounts.getInstance().loggedInAccount();
+        let fromAccount : Account = dummyAccounts.i().loggedInAccount();
         return new Promise(function(resolve, reject){
              //do we need a confirmation page here? Maybe the MEPS fees thingy?
 
-             dummyAccounts.getInstance().addToBalance(fromAccount, accountType, -parseFloat(withdrawAmount));
+             dummyAccounts.i().addToBalance(fromAccount, accountType, -parseFloat(withdrawAmount));
             //For Debugging
-            console.log("Withdraw", fromAccount.accNumber, accountType, withdrawAmount);
+            console.log("Withdraw", dummyAccounts.i().getAccountNumberByType(fromAccount, accountType), accountType, withdrawAmount);
 
              //TODO: add a do you want to print receipt dialog here
-            Pages.takeReceipt().finally(resolve);
+            Pages.askReceiptPage().finally(resolve);
         });
     }
 
@@ -230,7 +233,7 @@ export class Pages { //implements Page {
                         }
                         else
                         {
-                            if(amount <= dummyAccounts.getInstance().getAccountBalance(accountType))
+                            if(amount <= dummyAccounts.i().getAccountBalance(accountType))
                             {
                                 m.showLoader("Processing", Pages.withdrawConfirmation(accountType, amount.toString()));
                                 $("#" + modalID).modal('hide');
@@ -255,7 +258,7 @@ export class Pages { //implements Page {
     static balanceModal(accountType : AccountTypes) : void
     {
         var modalID = "balanceModal-" + Math.random().toString(36).substring(7);
-        var balanceAmount = dummyAccounts.getInstance().getAccountBalance(accountType);
+        var balanceAmount = dummyAccounts.i().getAccountBalance(accountType);
         m.get("modal.balance.html").then(data => {
             var code = Main.processTpl(data.toString(), {"balanceModalID": modalID, "title": "Balance", "balanceAmount" : balanceAmount.toFixed(2)});
             $("#footer").append(code);
@@ -272,29 +275,54 @@ export class Pages { //implements Page {
         }).catch(error => { Main.loadErrorPage(error);})
     }
 
-    static takeReceipt() : Promise<object>
+    static askReceiptPage()  : Promise<object>
     {
         return new Promise(function(resolve, reject){
-            m.getAndLoad("result.html", {"Message" : s.takeReceipt})
-            .then(() => {
-               
-                m.addBtnListener("resultNo", function() {
-                    Pages.thankYouPage();
-                });
+            m.getAndLoad("result.printreceipt.html", {})
+                .then(() => {
+                
+                    m.addBtnListener("resultNo", function() {
+                        Pages.takeReceiptPage(true);
+                    });
 
-                m.addBtnListener("resultYes", function() {
-                    m.defaultCancelCallback("menu");
-                });
+                    m.addBtnListener("resultYes", function() {
+                        Pages.takeReceiptPage(false);
+                    });
 
-                resolve();
-            }).catch(reject);
+                    resolve();
+                }).catch(reject);
         });
     }
+
+    static takeReceiptPage(noReceipt : boolean = false) : Promise<object>
+    {
+        return new Promise(function(resolve, reject){
+                m.getAndLoad("result.html", {"hasReceipt" : (!noReceipt), "takeReceiptMessage" : s.takeReceipt, "isLoggedin" : dummyAccounts.isLoggedIn()})
+                    .then(() => {
+                    
+                        m.addBtnListener("resultNo", function() {
+                            Pages.thankYouPage();
+                        });
+
+                        m.addBtnListener("resultYes", function() {
+                            m.defaultCancelCallback("menu");
+                        });
+
+                        if(!dummyAccounts.isLoggedIn())
+                            setTimeout(function() {
+                                Pages.thankYouPage();
+                            }, 1000);
+
+                        resolve();
+                    }).catch(reject);
+        });
+    }
+
     static thankYouPage() : Promise<object>
     {
         return new Promise(function(resolve, reject){
-            console.log("balance", dummyAccounts.getInstance().loggedInAccount());
-            m.getAndLoad("logout.html", {"Message" : s.thankYou, "removeCardMessage": s.removeCard, "hasCard" : dummyAccounts.getInstance().loggedInByCard})
+            console.log("balance", dummyAccounts.i().loggedInAccount());
+            m.getAndLoad("logout.html", {"Message" : s.thankYou, "removeCardMessage": s.removeCard, "hasCard" : dummyAccounts.i().loggedInByCard})
             .then(() => {
                 resolve();
 
@@ -316,7 +344,7 @@ export class Pages { //implements Page {
                 resolve(AccountTypes.Current);
             else
             {
-                var modalID = "accountSelectionModal-" + a.accNumber + Math.random().toString(36).substring(7);
+                var modalID = "accountSelectionModal-" + a.accNumberSavings + Math.random().toString(36).substring(7);
                 //show selection modal
                 m.get("modal.accountselection.html").then(data => {
                     var code = Main.processTpl(data.toString(), {"accountSelectionModalID": modalID, "title" : "Select Savings or Current Account"});

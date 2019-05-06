@@ -10,7 +10,7 @@ export class Withdraw {
         return new Promise(function(resolve, reject){
             
             m.getAndLoad("withdraw.insertamount.html", { "AccountType" : JSON.stringify(accountType),
-                                                        "AccountObject" : dummyAccounts.getInstance().loggedInAccount()})
+                                                        "AccountObject" : dummyAccounts.i().loggedInAccount()})
             .then(() => {
                 m.addDefaultCancelBtn("menu");
             
@@ -112,7 +112,7 @@ export class Withdraw {
 
                 if(total < 1000000)
                 {
-                    if(total <= dummyAccounts.getInstance().getAccountBalance(accountType))
+                    if(total <= dummyAccounts.i().getAccountBalance(accountType))
                     {
                         m.unbindKeyboardListener("withdrawAmount");
                         m.showLoader("Processing", Pages.withdrawConfirmation(accountType, total.toString()));
