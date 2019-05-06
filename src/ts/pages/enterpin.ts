@@ -5,10 +5,10 @@ import {dummyAccounts, Account} from './../data/account';
 import { Menu } from './menu';
 export class EnterPin
 {
-    static load() : Promise<object>
+    static load(accNumber? : string) : Promise<object>
     {
         return new Promise(function(resolve, reject){
-            m.getAndLoad("enterpin.html",  []).then(data => {
+            m.getAndLoad("enterpin.html",  {"AccountToLogin": accNumber}).then(data => {
                 EnterPin.bindKeyboardListener();
 
                 $("#pinNumber").on("change", function() {
@@ -118,9 +118,22 @@ export class EnterPin
             $("#error").css("display", "none");
             Main.showLoader("Loading", new Promise(function(resolve, reject) {
                 var pin : string =  $("#pinNumber").val().toString();
+
+                
                 if(pin.length >= EnterPin.pinNumber.maxChar)
                 {
-                    let a : number = dummyAccounts.getInstance().getAccountByPin(pin);
+                    let a : number; // = dummyAccounts.getInstance().getAccountByPin(pin);
+                    if($("#AccountToLogin").length)
+                    {
+                        console.log("account to login");
+                        //Not the best coding practice, but saves time.
+                        a = dummyAccounts.getInstance().getAccountByNumber($("#AccountToLogin").val().toString());
+                        if(a == -1 || pin !== dummyAccounts.getInstance().getAccount(a).pinCode)
+                            a = -1;
+                    }
+                    else
+                        a = dummyAccounts.getInstance().getAccountByPin(pin);
+                    
                     if(a == -1)
                     {
                         //show error

@@ -6,23 +6,63 @@ import { Menu } from './pages/menu';
 import { DepositDetails } from './pages/deposit.details';
 import { TransferDetails } from './pages/transfer.details';
 import { Withdraw } from './pages/withdraw.amount';
+import { DepositAccountNumber } from './pages/deposit.accountnumber';
+import { CardlessLogin } from './pages/cardless.login';
 
 export class Pages { //implements Page {
     static splash() : void
     {
-        
+        /*
         dummyAccounts.getInstance().loggedInAccount(dummyAccounts.getInstance().getAccountByPin("123456"));
         Menu.load().then();
-        return; 
-        m.getAndLoad("splash.html",  {"title" : "Splash Screen"})
+        return; */
+        m.getAndLoad("splash.html",  {"title" : "Some Bank"})
             .then(data => {
                 m.addBtnListener("insertCard", function(){
                     m.showLoader("Loading", EnterPin.load());
                 });    
+                m.addBtnListener("touchOverlay", function() {
+                    Pages.cardlessModal().then(data => {
+                        if(data === "CDM")
+                            m.showLoader("Loading", DepositAccountNumber.load());
+                        else if(data === "ATM")
+                            m.showLoader("Loading", CardlessLogin.load());   
+                    }).catch(() => {});
+                });
             })
             .catch(error => {
                 m.loadErrorPage(error);
             });
+    }
+
+    static cardlessModal() : Promise<string>
+    {
+        return new Promise(function(resolve, reject){
+            var modalID = "cardlessModal-" + Math.random().toString(36).substring(7);
+            //show modal
+            m.get("modal.cardless.html").then(data => {
+                var code = Main.processTpl(data.toString(), {"cardlessModalID": modalID});
+                $("#footer").append(code);
+
+                $("#" + modalID).modal('show');
+
+                $("#" + modalID).on('hidden.bs.modal', function () {
+                    reject();
+                    $(this).remove();
+                })
+                
+                $("#" + modalID).find("#aATM").on("click", function() {
+                    resolve("ATM");
+                    $("#" + modalID).modal('hide');
+                });
+                
+                $("#" + modalID).find("#aCDM").on("click", function() {
+                    resolve("CDM");
+                    $("#" + modalID).modal('hide');
+                });
+               
+            }).catch(error => { Main.loadErrorPage(error); reject(); })
+        });
     }
 
     static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, depositAmount : string) : Promise<object>

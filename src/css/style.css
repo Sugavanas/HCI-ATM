@@ -243,3 +243,27 @@ content{
 	-ms-flex-wrap: wrap;
 	flex-wrap: wrap;
 }
+
+/** Enter Account Number Page **/
+
+.accountNumberBoxes{
+	/*top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;*/
+	text-align: center;
+	margin: 30px 0;    
+}
+
+.accountNumberBoxes:hover > .accountNumberBox,  .accountNumberBoxes.focus > .accountNumberBox{
+  background: rgba(109, 109, 109, 0.5);
+}
+
+.accountNumberBox{
+  height: 40px;
+  width: 30px;
+  display: inline-block;
+  background: rgba(25,25,25, 0.5);
+  vertical-align: top;
+  line-height: 40px;
+}

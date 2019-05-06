@@ -38,7 +38,7 @@
             <div class="pinBox"></div>
         </div>
         <input type="hidden" id="pinNumber"/>
-
+        {{#AccountToLogin}}<input type="hidden" id="AccountToLogin" value="{{AccountToLogin}}"/>{{/AccountToLogin}}
         <div class="btnDiv">
             <button class="btn btn-warning" id="clearPin">Clear</button>
             <button class="btn btn-success" id="confirmPin" disabled>Confirm</button>

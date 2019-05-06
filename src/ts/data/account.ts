@@ -38,6 +38,13 @@ export class dummyAccounts {
 
         if (this.loggedInAccountIndex != null)
             return this.accounts[this.loggedInAccountIndex];
+        else
+            return null;
+    }
+
+    public isLoggedIn() : boolean
+    {
+        return !(this.loggedInAccountIndex == null);
     }
 
     //A shit way to update, but it works :))
