@@ -10,4 +10,5 @@ export class s {
 
     static readonly takeReceipt : string = "Please take your receipt.";
     static readonly thankYou : string = "Thank you for....";
+    static readonly removeCard : string = "Please take your card";
 }

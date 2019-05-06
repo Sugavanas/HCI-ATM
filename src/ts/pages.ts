@@ -291,10 +291,13 @@ export class Pages { //implements Page {
     {
         return new Promise(function(resolve, reject){
             console.log("balance", dummyAccounts.getInstance().loggedInAccount());
-            m.getAndLoad("result.html", {"Message" : s.thankYou})
+            m.getAndLoad("logout.html", {"Message" : s.thankYou, "removeCardMessage": s.removeCard, "hasCard" : dummyAccounts.getInstance().loggedInByCard})
             .then(() => {
-                setTimeout(() => {
-                    m.defaultCancelCallback();
+                resolve();
+
+                setTimeout(() => {                
+                    Main.unbindKeyboardListener("");
+                    Main.initialLoad();
                 }, 2000);
             }).catch();
         });
