@@ -4,28 +4,20 @@ import { NumPad } from '../numpad'
 import {dummyAccounts, Account, AccountTypes} from '../data/account';
 import { Pages } from '../pages';
 
-export class TransferDetails {
-    static load(toAccount : Account, toAccountType : AccountTypes, fromAccountType : AccountTypes, oldAmount : any = null) : Promise<object>
+export class Withdraw {
+    static load(accountType : AccountTypes) : Promise<object>
     {
         return new Promise(function(resolve, reject){
             
-            m.getAndLoad("transfer.insertamount.html", { "toAccountObject" : toAccount,
-                                                        "toAccountObjectJSON" : JSON.stringify(toAccount),
-                                                        "toAccountType" : JSON.stringify(toAccountType),
-                                                        "fromAccountType" : JSON.stringify(fromAccountType),
-                                                        "fromAccountObject" : dummyAccounts.getInstance().loggedInAccount()})
+            m.getAndLoad("withdraw.insertamount.html", { "AccountType" : JSON.stringify(accountType),
+                                                        "AccountObject" : dummyAccounts.getInstance().loggedInAccount()})
             .then(() => {
                 m.addDefaultCancelBtn("menu");
             
-                TransferDetails.bindKeyBoardListener();
+                Withdraw.bindKeyBoardListener();
 
                 $("#inputAmount").on("change", function() {
                     var val = $("#inputAmount").val().toString();
-                  
-                    if(val.length <= 2)
-                        val = "0" + val;
-                    
-                    val = val.substr(0, val.length - 2) + "." +  val.substr(val.length - 2);
                     var amount = parseFloat(val);
 
                     if(isNaN(amount))
@@ -33,23 +25,23 @@ export class TransferDetails {
                                         
                     $("#inputAmountMask").val(amount.toFixed(2));
 
-                    if((val.length - 1) >= TransferDetails.transferAmount.minChar && (val.length - 1) <= TransferDetails.transferAmount.maxChar)
+                    if((val.length) >= Withdraw.Amount.minChar && (val.length) <= Withdraw.Amount.maxChar)
                         $("#confirmAmount").removeAttr("disabled");
                     else
                         $("#confirmAmount").attr("disabled", "true");
         
-                }).val(oldAmount).trigger("change");
+                }).trigger("change");
 
                 m.addBtnListener("inputAmountMask", function() {
-                    m.unbindKeyboardListener("transferAmount");
-                    new NumPad("insertAmountNumPad", "Enter Amount to transfer",  $("#inputAmount").val().toString(), TransferDetails.transferAmount.minChar, TransferDetails.transferAmount.maxChar, false, true, true, function(){
-                        TransferDetails.bindKeyBoardListener();
-                    }, true, TransferDetails.transferAmount.add, TransferDetails.transferAmount.backspace, TransferDetails.transferAmount.clear, TransferDetails.transferAmount.confirm, 
+                    m.unbindKeyboardListener("withdrawAmount");
+                    new NumPad("insertWithdrawAmountNumPad", "Enter Amount to withdraw",  $("#inputAmount").val().toString(), Withdraw.Amount.minChar, Withdraw.Amount.maxChar, false, true, false, function(){
+                        Withdraw.bindKeyBoardListener();
+                    }, true, Withdraw.Amount.add, Withdraw.Amount.backspace, Withdraw.Amount.clear, Withdraw.Amount.confirm, 
                     function() { m.defaultCancelCallback("menu"); });
                 });
 
-                m.addBtnListener("confirmAmount", TransferDetails.transferAmount.confirm);
-                m.addBtnListener("clearAmount",  TransferDetails.transferAmount.clear);
+                m.addBtnListener("confirmAmount", Withdraw.Amount.confirm);
+                m.addBtnListener("clearAmount",  Withdraw.Amount.clear);
                 resolve();
             }).catch(reject);
         });
@@ -57,13 +49,13 @@ export class TransferDetails {
 
     static bindKeyBoardListener()
     {
-        m.bindKeyboardListener("transferAmount", function(key){
+        m.bindKeyboardListener("withdrawAmount", function(key){
             if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
-                TransferDetails.transferAmount.add(String.fromCharCode(key));
+                Withdraw.Amount.add(String.fromCharCode(key));
             else if(key === 8)
-                TransferDetails.transferAmount.backspace();
+                Withdraw.Amount.backspace();
             else if(key === 13)
-                TransferDetails.transferAmount.confirm();
+                Withdraw.Amount.confirm();
             else
             {
                 $.toast({
@@ -76,15 +68,15 @@ export class TransferDetails {
         });
     }
 
-    static transferAmount = class
+    static Amount = class
     {
         static minChar = 1;
-        static maxChar = 8;
+        static maxChar = 6;
 
         static add(val) 
         {
             var amount : string = $("#inputAmount").val().toString();
-            if(amount.length < TransferDetails.transferAmount.maxChar)
+            if(amount.length < Withdraw.Amount.maxChar)
             {
                 $("#inputAmount").val(amount + val).trigger("change");
             }
@@ -112,21 +104,18 @@ export class TransferDetails {
 
         static confirm()
         {
-            var val = $("#inputAmount").val().toString();
-            let toAccount : Account = JSON.parse($("#transferToAccount").val().toString());
-            let toAccountType : AccountTypes = JSON.parse($("#transferToAccountType").val().toString());            
-            let fromAccountType : AccountTypes = JSON.parse($("#transferFromAccountType").val().toString());
-            if(val.length >= TransferDetails.transferAmount.minChar && val.length <= TransferDetails.transferAmount.maxChar)
+            var val = $("#inputAmount").val().toString();    
+            let accountType : AccountTypes = JSON.parse($("#withdrawAccountType").val().toString());
+            if(val.length >= Withdraw.Amount.minChar && val.length <= Withdraw.Amount.maxChar)
             {
-
-                var total = parseFloat((val.substr(0, val.length - 2) + "." +  val.substr(val.length - 2)));
+                var total = parseFloat(val);
 
                 if(total < 1000000)
                 {
-                    if(total <= dummyAccounts.getInstance().getAccountBalance(fromAccountType))
+                    if(total <= dummyAccounts.getInstance().getAccountBalance(accountType))
                     {
-                        m.unbindKeyboardListener("transferAmount");
-                        m.showLoader("Processing", Pages.transferConfirm(toAccount, toAccountType, fromAccountType, total.toString()));
+                        m.unbindKeyboardListener("withdrawAmount");
+                        m.showLoader("Processing", Pages.withdrawConfirmation(accountType, total.toString()));
                     }
                     else
                     {

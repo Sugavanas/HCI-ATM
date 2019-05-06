@@ -5,6 +5,7 @@ import {dummyAccounts, Account, AccountTypes} from './data/account';
 import { Menu } from './pages/menu';
 import { DepositDetails } from './pages/deposit.details';
 import { TransferDetails } from './pages/transfer.details';
+import { Withdraw } from './pages/withdraw.amount';
 
 export class Pages { //implements Page {
     static splash() : void
@@ -115,6 +116,90 @@ export class Pages { //implements Page {
         });
     }
 
+    static withdrawConfirmation(accountType : AccountTypes, withdrawAmount : string) : Promise<object>
+    {
+        let fromAccount : Account = dummyAccounts.getInstance().loggedInAccount();
+        return new Promise(function(resolve, reject){
+             //do we need a confirmation page here? Maybe the MEPS fees thingy?
+
+             dummyAccounts.getInstance().addToBalance(fromAccount, accountType, -parseFloat(withdrawAmount));
+            //For Debugging
+            console.log("Withdraw", fromAccount.accNumber, accountType, withdrawAmount);
+
+             //TODO: add a do you want to print receipt dialog here
+            Pages.takeReceipt().finally(resolve);
+        });
+    }
+
+    static withdrawFastCashModal(accountType : AccountTypes) : Promise<number>
+    {
+        return new Promise(function(resolve, reject){
+            var modalID = "fastCashModal-" + Math.random().toString(36).substring(7);
+            //show modal
+            m.get("modal.withdraw.fastcash.html").then(data => {
+                var code = Main.processTpl(data.toString(), {"fastcashModalID": modalID, "title" : "Choose amount to withdraw"});
+                $("#footer").append(code);
+
+                $("#" + modalID).modal('show');
+
+                $("#" + modalID).on('hidden.bs.modal', function () {
+                    reject();
+                    $(this).remove();
+                })
+                
+                $("#" + modalID).find(".fastCash").each(function(){
+                    $(this).on("click", function() {
+                        var amount : number = parseFloat($(this).data("val"));
+                        if(amount == 0)
+                        {
+                            m.showLoader("Loading", Withdraw.load(accountType)); 
+                            $("#" + modalID).modal('hide');
+                            resolve(0);
+                        }
+                        else
+                        {
+                            if(amount <= dummyAccounts.getInstance().getAccountBalance(accountType))
+                            {
+                                m.showLoader("Processing", Pages.withdrawConfirmation(accountType, amount.toString()));
+                                $("#" + modalID).modal('hide');
+                                resolve(amount);
+                            }
+                            else
+                            {
+                                $.toast({
+                                    text: s.lowBalance,
+                                    position: 'bottom-center',
+                                    stack: false,
+                                    allowToastClose: true
+                                });
+                            }
+                        }
+                    });
+                });
+            }).catch(error => { Main.loadErrorPage(error); reject(); })
+        });
+    }
+
+    static balanceModal(accountType : AccountTypes) : void
+    {
+        var modalID = "balanceModal-" + Math.random().toString(36).substring(7);
+        var balanceAmount = dummyAccounts.getInstance().getAccountBalance(accountType);
+        m.get("modal.balance.html").then(data => {
+            var code = Main.processTpl(data.toString(), {"balanceModalID": modalID, "title": "Balance", "balanceAmount" : balanceAmount.toFixed(2)});
+            $("#footer").append(code);
+
+            $("#" + modalID).modal('show');
+
+            $("#" + modalID).on('hidden.bs.modal', function () {
+                $(this).remove();
+            })
+            
+            $("#" + modalID).find("#close").on("click", function(){
+                $("#" + modalID).modal('hide');
+            });
+        }).catch(error => { Main.loadErrorPage(error);})
+    }
+
     static takeReceipt() : Promise<object>
     {
         return new Promise(function(resolve, reject){
@@ -164,6 +249,7 @@ export class Pages { //implements Page {
 
                     $("#" + modalID).on('hidden.bs.modal', function () {
                         reject();
+                        $(this).remove();
                     })
 
                     $("#" + modalID).find("#aSavings").on("click", function() {

@@ -15,52 +15,52 @@
     </style>
     <div class="container">
         <div class="menu-header">
-            <div class="" style="float:left;">Welcome, {{displayName}}</div>
+            <div class="" style="float:left;">Welcome{{#displayName}}, {{displayName}} {{/displayName}}</div>
             <div class="" style="float:right;">Current time</div>
             <div class="">
                 Current Account Balance: 
             </div>
         </div>
-        <div class="col-md-12 col-sm-12" style="clear:both;">
+        <div class="col-md-12 " style="clear:both; max-width: 145vh; margin: auto;">
             <div class="row">
-                <div class="col col-xs-6">
+                <div class="col ">
                     <div class="menu-box" id="menu-withdraw">
                         <div>
                             Withdraw
                         </div>
                     </div>
                 </div>
-                <div class="col col-xs-6">
+                <div class="col ">
                     <div class="menu-box" id="menu-deposit">
                          <div>
                             Deposit
                         </div>
                     </div>
                 </div>
-                <div class="col col-xs-6">
-                    <div class="menu-box">
-                        <div>
-                            Balance
+                <div class="col ">
+                    <div class="menu-box" id="menu-transfer">
+                         <div>
+                            Transfer
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row">
-                    <div class="col col-xs-6">
+                    <div class="col ">
+                        <div class="menu-box" id="menu-balance">
+                            <div>
+                                Balance
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-cm-12">
                         <div class="menu-box">
                             <div>
                                 Others?
                             </div>
                         </div>
                     </div>
-                    <div class="col col-xs-6">
-                        <div class="menu-box" id="menu-transfer">
-                             <div>
-                                Transfer
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col col-xs-6">
+                    <div class="col ">
                         <div class="menu-box">
                             <div>
                                 WHAT? <!-- style this shit and add icons-->

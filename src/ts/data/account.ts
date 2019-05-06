@@ -66,6 +66,15 @@ export class dummyAccounts {
         return this.accounts[index];
     }
 
+    getAccountBalance(accSelection : AccountTypes, account? : Account, ) : number
+    {
+        if(!account)
+            account = this.loggedInAccount();
+        if(accSelection == AccountTypes.Current)
+            return account.currentAccountBalance;
+        else
+            return account.savingAccountBalance;
+    }
 
     static getInstance(): dummyAccounts 
     {
