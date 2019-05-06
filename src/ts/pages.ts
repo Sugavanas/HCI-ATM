@@ -65,6 +65,35 @@ export class Pages { //implements Page {
         });
     }
 
+    static depositSelection() : Promise<string>
+    {
+        return new Promise(function(resolve, reject){
+            var modalID = "depositSelection-" + Math.random().toString(36).substring(7);
+            //show modal
+            m.get("modal.deposit.selection.html").then(data => {
+                var code = Main.processTpl(data.toString(), {"depositSelectionModalID": modalID});
+                $("#footer").append(code);
+
+                $("#" + modalID).modal('show');
+
+                $("#" + modalID).on('hidden.bs.modal', function () {
+                    reject();
+                    $(this).remove();
+                })
+                
+                $("#" + modalID).find("#aOwnAccount").on("click", function() {
+                    resolve("own");
+                    $("#" + modalID).modal('hide');
+                });
+                
+                $("#" + modalID).find("#aOther").on("click", function() {
+                    resolve("other");
+                    $("#" + modalID).modal('hide');
+                });
+               
+            }).catch(error => { Main.loadErrorPage(error); reject(); })
+        });
+    }
     static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, depositAmount : string) : Promise<object>
     {
         var intDepositAmount = parseInt(depositAmount);

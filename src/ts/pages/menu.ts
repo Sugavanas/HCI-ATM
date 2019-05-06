@@ -19,10 +19,20 @@ export class Menu {
                 if(isLoggedIn)
                 {
                     m.addBtnListener("menu-deposit", function(){
-                        Pages.accountSelection(dummyAccounts.getInstance().loggedInAccount()).then(
-                            data => {
-                                m.showLoader("Loading", DepositDetails.load(dummyAccounts.getInstance().loggedInAccount(), data));
-                            }).catch(() => {});
+                        Pages.depositSelection().then(data => {
+                            if(data == "own")
+                            {
+                                Pages.accountSelection(dummyAccounts.getInstance().loggedInAccount()).then(
+                                    selection => {
+                                        m.showLoader("Loading", DepositDetails.load(dummyAccounts.getInstance().loggedInAccount(), selection));
+                                    }).catch(() => {});
+                            }
+                            else
+                            {
+                                DepositAccountNumber.load();
+                            }
+                        })
+                       
                     });
 
                     m.addBtnListener("menu-transfer", function() {
