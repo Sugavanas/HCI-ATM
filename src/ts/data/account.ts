@@ -13,9 +13,7 @@ export class dummyAccounts {
 
     constructor() 
     {
-        console.log("created");
-        this.accounts.push(new Account(true, "123456", "987654321", true, true, "John Doe", "John", 100.00, 1000.20));
-        this.accounts.push(new Account(true, "654321", "123456789", true, true, "Jane Doe", "Jane", 200.00, 2123.20));
+        this.load();
     }
 
     //just a dummy function
@@ -52,6 +50,7 @@ export class dummyAccounts {
 
         this.accounts[index] = newAccount;
 
+        this.save();
         console.log("Updated Accounts", this.accounts);
     }
 
@@ -93,6 +92,32 @@ export class dummyAccounts {
 
         return false;
     }
+
+    private save() : void
+    {
+        localStorage.setItem("accounts", JSON.stringify(this.accounts));
+    }
+
+    private load() : void
+    {
+        if(localStorage.getItem("accounts") !== null)
+            this.accounts = JSON.parse(localStorage.getItem("accounts"));
+        else
+        {
+            console.log("created");
+            this.accounts.push(new Account(true, "123456", "987654321", "John Doe", "John", true, 5890.96, true, 50000.25));
+            this.accounts.push(new Account(true, "654321", "123456789", "Jane Doe", "Jane", true, 10000.00, false, 0));
+            this.accounts.push(new Account(true, "111111", "111111111", "Baby Doe", "Baby", false, 0, true, 25512.12));
+            this.accounts.push(new Account(true, "222222", "222222222", "Johnny Doe", "Johnny", true, 24521.21, true, 84115.08));
+            this.save();
+        }
+    }
+
+    public clear() : void
+    {
+        localStorage.clear();
+        location.reload();
+    }
 }
 
 export class Account {
@@ -100,14 +125,14 @@ export class Account {
         public pinCode: string,
         public accNumber: string,
 
-        public hasSavingsAccount: boolean,
-        public hasCurrentAccount: boolean,
-
         public fullName: string,//displayed for transfer and etc
         public displayName: string,
 
-        public currentAccountBalance: number,
-        public savingAccountBalance: number) {
+        public hasSavingsAccount: boolean,
+        public savingAccountBalance: number,
+        public hasCurrentAccount: boolean,
+        public currentAccountBalance: number
+        ) {
 
     }
 }

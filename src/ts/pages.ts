@@ -21,6 +21,9 @@ export class Pages { //implements Page {
                 m.addBtnListener("insertCard", function(){
                     m.showLoader("Loading", EnterPin.load());
                 });    
+                m.addBtnListener("clearData", function(){
+                    dummyAccounts.getInstance().clear();
+                });    
                 m.addBtnListener("touchOverlay", function() {
                     Pages.cardlessModal().then(data => {
                         if(data === "CDM")
@@ -297,6 +300,7 @@ export class Pages { //implements Page {
 
                 setTimeout(() => {                
                     Main.unbindKeyboardListener("");
+                    location.reload();
                     Main.initialLoad();
                 }, 2000);
             }).catch();
