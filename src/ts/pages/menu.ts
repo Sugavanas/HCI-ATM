@@ -55,8 +55,12 @@ export class Menu {
                                 Pages.balanceModal(data);
                             }).catch(() => {});
                     });
+
+                    m.addBtnListener("menu-logout", function() {
+                        m.showLoader("Logging Out", Pages.thankYouPage());
+                    });
                 } else {
-                    
+                    reject("This was bad");
                 }
                 resolve();
             }).catch(reject);

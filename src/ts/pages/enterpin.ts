@@ -130,6 +130,8 @@ export class EnterPin
                         a = dummyAccounts.getInstance().getAccountByNumber($("#AccountToLogin").val().toString());
                         if(a == -1 || pin !== dummyAccounts.getInstance().getAccount(a).pinCode)
                             a = -1;
+                        else
+                            dummyAccounts.getInstance().loggedInByCard = false;
                     }
                     else
                         a = dummyAccounts.getInstance().getAccountByPin(pin);

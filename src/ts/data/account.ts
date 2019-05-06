@@ -7,11 +7,9 @@ export class dummyAccounts {
     private accounts: Account[] = [];
 
     public loggedInAccountIndex = null;
-    public transferToAccount: Account = null;
+    public loggedInByCard : boolean = true;
 
     private static instance: dummyAccounts = null;
-
-    public static accountSelection = AccountTypes;
 
     constructor() 
     {

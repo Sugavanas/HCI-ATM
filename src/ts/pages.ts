@@ -287,16 +287,17 @@ export class Pages { //implements Page {
             }).catch(reject);
         });
     }
-
-    static thankYouPage() : void
+    static thankYouPage() : Promise<object>
     {
-        console.log("balance", dummyAccounts.getInstance().loggedInAccount());
-        m.getAndLoad("result.html", {"Message" : s.thankYou})
-        .then(() => {
-            setTimeout(() => {
-                m.defaultCancelCallback();
-            }, 10000);
-        }).catch();
+        return new Promise(function(resolve, reject){
+            console.log("balance", dummyAccounts.getInstance().loggedInAccount());
+            m.getAndLoad("result.html", {"Message" : s.thankYou})
+            .then(() => {
+                setTimeout(() => {
+                    m.defaultCancelCallback();
+                }, 2000);
+            }).catch();
+        });
     }
 
     static accountSelection(a : Account) : Promise<AccountTypes>

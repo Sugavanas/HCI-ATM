@@ -1,6 +1,6 @@
 <tpl id="tplContent">
     <style>
-      .pinBoxes{
+        .pinBoxes{
           /*top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
@@ -24,9 +24,9 @@
 
     <div class="pageContent">
         <div class="title text-center">Enter pin</div>
-        
+
         <div class="alert alert-danger" id="error" role="alert" style="display:none;">
-                
+
         </div>
 
         <div class="pinBoxes" id="pinBoxes">
@@ -37,8 +37,8 @@
             <div class="pinBox"></div>
             <div class="pinBox"></div>
         </div>
-        <input type="hidden" id="pinNumber"/>
-        {{#AccountToLogin}}<input type="hidden" id="AccountToLogin" value="{{AccountToLogin}}"/>{{/AccountToLogin}}
+        <input type="hidden" id="pinNumber" />
+        {{#AccountToLogin}}<input type="hidden" id="AccountToLogin" value="{{AccountToLogin}}" />{{/AccountToLogin}}
         <div class="btnDiv">
             <button class="btn btn-warning" id="clearPin">Clear</button>
             <button class="btn btn-success" id="confirmPin" disabled>Confirm</button>
