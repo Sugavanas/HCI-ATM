@@ -1,0 +1,31 @@
+{
+  "name": "HCI-ATM",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sugavanas/HCI-ATM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sugavanas/HCI-ATM/issues"
+  },
+  "homepage": "https://github.com/Sugavanas/HCI-ATM#readme",
+  "devDependencies": {
+    "@types/bootstrap": "^4.3.0",
+    "@types/jquery": "^3.3.29",
+    "@types/mustache": "^0.8.32",
+    "browserify": "^16.2.3",
+    "gulp": "^4.0.2",
+    "gulp-connect": "^5.7.0",
+    "tsify": "^4.0.1",
+    "typescript": "^3.4.5",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}

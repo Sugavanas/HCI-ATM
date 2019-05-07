@@ -9,7 +9,7 @@ $(document).ready(function() {
 });
 
 export class Main {
-    static baseUrl = "/"; // "http://159.65.69.18/HCI/";
+    static baseUrl = "./"; // "http://159.65.69.18/HCI/";
     static get(page : string) : Promise<object>
     {
         return new Promise(function(resolve, reject) { 

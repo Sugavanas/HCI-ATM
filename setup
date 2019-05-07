@@ -1,10 +1,16 @@
+Install Node JS: https://nodejs.org/dist/v10.15.3/node-v10.15.3-x64.msi
+
+and run command in HCI folder: 
+
+npm update
+gulp default
+
+--------------------------------------------------------------------------
 npm install --save-dev browserify tsify vinyl-source-stream gulp typescript 
 npm install --save-dev gulp-connect
 npm i --save-dev @types/jquery
 npm i --save-dev @types/mustache
 npm i --save-dev @types/bootstrap
-
-gulp default
-
+---------------------------------------------------------------------------
 
 Attribution CC-BY License: https://loading.io/spinner/double-ring
