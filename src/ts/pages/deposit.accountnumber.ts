@@ -53,7 +53,10 @@ export class DepositAccountNumber { //this page is used for both transfer and de
                     DepositAccountNumber.accountNumber.clear();
                 });
                 
-                m.addDefaultCancelBtn();
+                if(dummyAccounts.isLoggedIn())
+                    m.addDefaultCancelBtn("menu");
+                else
+                    m.addDefaultCancelBtn();
                 resolve();
            });
         });

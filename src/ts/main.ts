@@ -41,7 +41,6 @@ export class Main {
     {
         return new Promise(function(resolve, reject) { 
             Main.get(page).then(template => {
-                //TODO: resolve after loading content to prevent errors if there is a delay.
                 Main.loadContent(Main.processTpl(template.toString(), arrayVal)).then(() => {
                     resolve();
                 });

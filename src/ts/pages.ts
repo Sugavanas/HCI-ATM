@@ -179,7 +179,7 @@ export class Pages { //implements Page {
                 m.addDefaultCancelBtn("menu");
 
                 m.addBtnListener("editAmount", function() {
-                    m.showLoader("Loading", TransferDetails.load(toAccount, toAccountType, fromAccountType, trasnferAmount));
+                    m.showLoader("Loading", TransferDetails.load(toAccount, toAccountType, fromAccountType, trasnferAmount.replace(".", "")));
                 });
                 
                 m.addBtnListener("confirmTransaction", function() {
@@ -213,7 +213,6 @@ export class Pages { //implements Page {
             //For Debugging
             console.log("Withdraw", dummyAccounts.i().getAccountNumberByType(fromAccount, accountType), accountType, withdrawAmount);
 
-             //TODO: add a do you want to print receipt dialog here
             Pages.askReceiptPage().finally(resolve);
         });
     }
