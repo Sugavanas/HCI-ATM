@@ -11,6 +11,12 @@ import { Withdraw } from './withdraw.amount';
 export class Menu {
     static load() : Promise<object>
     {
+        if(!dummyAccounts.isLoggedIn())
+        { 
+            m.defaultCancelCallback();
+            location.reload();
+            return null;
+        }
         return new Promise(function(resolve, reject){
             m.getAndLoad("menu.html", {"displayName" : dummyAccounts.i().loggedInAccount().displayName})
             .then(() => {
@@ -22,7 +28,7 @@ export class Menu {
                         Pages.depositSelection().then(data => {
                             if(data == "own")
                             {
-                                Pages.accountSelection(dummyAccounts.i().loggedInAccount()).then(
+                                Pages.accountSelectionModal(dummyAccounts.i().loggedInAccount(), "Select account type to deposit").then(
                                     selection => {
                                         m.showLoader("Loading", DepositDetails.load(dummyAccounts.i().loggedInAccount(), selection));
                                     }).catch(() => {});
@@ -36,21 +42,21 @@ export class Menu {
                     });
 
                     m.addBtnListener("menu-transfer", function() { //TODO: transfer within own accounts
-                        Pages.accountSelection(dummyAccounts.i().loggedInAccount()).then(
+                        Pages.accountSelectionModal(dummyAccounts.i().loggedInAccount(), "Select account type to transfer from").then(
                             data => {
                                 m.showLoader("Loading", DepositAccountNumber.load(true, data)); 
                             }).catch(() => {});
                     });
 
                     m.addBtnListener("menu-withdraw", function() {
-                        Pages.accountSelection(dummyAccounts.i().loggedInAccount()).then(
+                        Pages.accountSelectionModal(dummyAccounts.i().loggedInAccount(), "Select account type to withdraw from").then(
                             data => {
                                 Pages.withdrawFastCashModal(data).catch(() => {});
                             }).catch(() => {});
                     });
 
                     m.addBtnListener("menu-balance", function() {
-                        Pages.accountSelection(dummyAccounts.i().loggedInAccount()).then(
+                        Pages.accountSelectionModal(dummyAccounts.i().loggedInAccount(), "Select account type").then(
                             data => {
                                 Pages.balanceModal(data);
                             }).catch(() => {});

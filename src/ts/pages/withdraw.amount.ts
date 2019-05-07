@@ -23,7 +23,7 @@ export class Withdraw {
                     if(isNaN(amount))
                         amount = 0;
                                         
-                    $("#inputAmountMask").val(amount.toFixed(2));
+                    $("#inputAmountMask").val("RM " + amount.toFixed(2));
 
                     if((val.length) >= Withdraw.Amount.minChar && (val.length) <= Withdraw.Amount.maxChar)
                         $("#confirmAmount").removeAttr("disabled");

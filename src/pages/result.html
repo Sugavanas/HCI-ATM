@@ -3,14 +3,16 @@
 
     </style>
     <div class="container">
-        <div class="Info">
+        <div class="background-title">
             {{#hasReceipt}}{{takeReceiptMessage}}{{/hasReceipt}}
         </div>
         {{#isLoggedin}}
-            Do you want to continue?
-            <div class="btnDiv">
-                <button class="btn btn-success" id="resultNo">No</button>
-                <button class="btn btn-success" id="resultYes">Yes</button>
+            <div class="centerBox">
+                <p>Do you want to continue?</p>
+                <div class="btnDiv">
+                        <button class="btn btn-success" id="resultNo">No</button>
+                        <button class="btn btn-success" id="resultYes">Yes</button>
+                </div>
             </div>
         {{/isLoggedin}}
     </div>

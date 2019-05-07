@@ -27,7 +27,7 @@ export class DepositDetails {
                     if(isNaN(amount))
                         amount = 0;
 
-                    $("#inputAmountMask").val(amount.toFixed(2));
+                    $("#inputAmountMask").val("RM " + amount.toFixed(2));
 
                     if(val.length >= DepositDetails.depsoitAmount.minChar && val.length <= DepositDetails.depsoitAmount.maxChar)
                         $("#confirmAmount").removeAttr("disabled");

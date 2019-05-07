@@ -335,7 +335,7 @@ export class Pages { //implements Page {
         });
     }
 
-    static accountSelection(a : Account) : Promise<AccountTypes>
+    static accountSelectionModal(a : Account, title : string) : Promise<AccountTypes>
     {
         return new Promise(function(resolve, reject) {
             if(!a.hasCurrentAccount)
@@ -347,7 +347,7 @@ export class Pages { //implements Page {
                 var modalID = "accountSelectionModal-" + a.accNumberSavings + Math.random().toString(36).substring(7);
                 //show selection modal
                 m.get("modal.accountselection.html").then(data => {
-                    var code = Main.processTpl(data.toString(), {"accountSelectionModalID": modalID, "title" : "Select Savings or Current Account"});
+                    var code = Main.processTpl(data.toString(), {"accountSelectionModalID": modalID, "title" : title});
                     $("#footer").append(code);
 
                     $("#" + modalID).modal('show');

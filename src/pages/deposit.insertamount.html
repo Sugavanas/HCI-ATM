@@ -1,6 +1,6 @@
 <tpl id="tplContent">
     <style>
-
+        
     </style>
     <div class="container">
         <!-- Show the old amount in a seperate field -->
@@ -9,14 +9,17 @@
         Name : {{AccountName}}
         Account Number : {{AccountNumber}}
 
-        Deposit Amount : <input type=text id="inputAmountMask" />
-        <input type=hidden id="inputAmount" />
-        <input type=hidden id="depositAccountNumber" value="{{AccountObject}}" />
-        <input type=hidden id="depositAccountSelection" value="{{AccountSelection}}" />
-        {{#OldAmount}}<input type=hidden id="depositOldAmount" value="{{OldAmount}}" /> {{/OldAmount}}
-        <div class="btnDiv">
-            <button class="btn btn-warning" id="clearAmount">Clear</button>
-            <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
+        <div class="centerBox">
+            <p>Deposit Amount</p> 
+            <input type=text id="inputAmountMask" class="amountInput" readonly="readonly"/>
+            <input type=hidden id="inputAmount" />
+            <input type=hidden id="depositAccountNumber" value="{{AccountObject}}" />
+            <input type=hidden id="depositAccountSelection" value="{{AccountSelection}}" />
+            {{#OldAmount}}<input type=hidden id="depositOldAmount" value="{{OldAmount}}" /> {{/OldAmount}}
+            <div class="btnDiv">
+                <button class="btn btn-warning" id="clearAmount">Clear</button>
+                <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
+            </div>
         </div>
     </div>
 </tpl>

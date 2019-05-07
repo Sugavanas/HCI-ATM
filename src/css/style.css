@@ -267,3 +267,29 @@ content{
   vertical-align: top;
   line-height: 40px;
 }
+
+/** Results Page **/
+
+.centerBox {
+	font-size: 30px;
+	padding: 25px 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	position: fixed;
+}
+
+.centerBox > p {
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+/** Enter Amount Pages **/
+
+.amountInput {
+	color: #fff;
+	background: transparent;
+	border: none;
+	padding-bottom: 5px;
+	text-align: center;
+}

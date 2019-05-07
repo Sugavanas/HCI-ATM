@@ -31,7 +31,7 @@ export class TransferDetails {
                     if(isNaN(amount))
                         amount = 0;
                                         
-                    $("#inputAmountMask").val(amount.toFixed(2));
+                    $("#inputAmountMask").val("RM " + amount.toFixed(2));
 
                     if((val.length - 1) >= TransferDetails.transferAmount.minChar && (val.length - 1) <= TransferDetails.transferAmount.maxChar)
                         $("#confirmAmount").removeAttr("disabled");
