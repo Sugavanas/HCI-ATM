@@ -51,12 +51,11 @@ export class dummyAccounts {
         this.accounts[index] = newAccount;
 
         this.save();
-        console.log("Updated Accounts", this.accounts);
     }
 
     public addToBalance(account: Account, accSelection: AccountTypes, amount: number) 
     {
-        console.log(amount, accSelection, account);
+        console.log("updateBalance", amount, accSelection, account);
         if (accSelection == AccountTypes.Current)
             account.currentAccountBalance += amount;
         else if (accSelection == AccountTypes.Savings)
@@ -109,7 +108,7 @@ export class dummyAccounts {
             this.accounts = JSON.parse(localStorage.getItem("accounts"));
         else
         {
-            console.log("created");
+            console.log("Accounts Created");
             this.accounts.push(new Account(true, "123456", "John Doe", "John", true, "123456789", 5890.96, true, "123456788", 50000.25));
             this.accounts.push(new Account(true, "654321",  "Jane Doe", "Jane", true, "987654321", 10000.00, false, "", 0));
             this.accounts.push(new Account(true, "111111", "Baby Doe", "Baby", false, "", 0, true, "111111111", 25512.12));

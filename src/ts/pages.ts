@@ -10,6 +10,20 @@ import { DepositAccountNumber } from './pages/deposit.accountnumber';
 import { CardlessLogin } from './pages/cardless.login';
 
 export class Pages { //implements Page {
+
+    static loadBackground()  : Promise<void>
+    {
+        return new Promise(function(resolve, reject) { 
+            m.get("background.html").then(template => {
+                $("body").removeClass("background");
+                $("body").addClass("background").html($(template).filter('#tplContent').html());
+                m.loadIncludes();
+                resolve();
+             });
+        });
+    }
+
+
     static splash() : void
     {
         /*
@@ -32,8 +46,6 @@ export class Pages { //implements Page {
                             m.showLoader("Loading", CardlessLogin.load());   
                     }).catch(() => {});
                 });
-
-                console.log(dummyAccounts.isLoggedIn());
             })
             .catch(error => {
                 m.loadErrorPage(error);
@@ -133,7 +145,7 @@ export class Pages { //implements Page {
                 m.addDefaultCancelBtn("menu");
 
                 m.addBtnListener("addCash", function() {
-                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, depositAmount));
+                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, depositAmount)); //TODO: addcash cancel return back to this page
                 });
                 
                 m.addBtnListener("confirmTransaction", function() {
@@ -321,7 +333,7 @@ export class Pages { //implements Page {
     static thankYouPage() : Promise<object>
     {
         return new Promise(function(resolve, reject){
-            console.log("balance", dummyAccounts.i().loggedInAccount());
+            console.log("Balance", dummyAccounts.i().loggedInAccount());
             m.getAndLoad("logout.html", {"Message" : s.thankYou, "removeCardMessage": s.removeCard, "hasCard" : dummyAccounts.i().loggedInByCard})
             .then(() => {
                 resolve();
@@ -358,13 +370,11 @@ export class Pages { //implements Page {
                     })
 
                     $("#" + modalID).find("#aSavings").on("click", function() {
-                        console.log("savings");
                         resolve(AccountTypes.Savings);
                         $("#" + modalID).modal('hide');
                     });
 
                     $("#" + modalID).find("#aCurrent").on("click", function() {
-                        console.log("current");
                         resolve(AccountTypes.Current);
                         $("#" + modalID).modal('hide');
                     });

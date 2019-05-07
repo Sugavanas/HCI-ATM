@@ -27,7 +27,7 @@ export class NumPad{
         if(closeC == null)
             closeC = function() {};
 
-        $.get("/includes/numpad.html", function(template){
+        $.get(Main.baseUrl + "/includes/numpad.html", function(template){
             var code = Main.processTpl(template, {"numPadModalID": instance.modalID, "numPadModalTitle" : title});
             
             $("#numPadTemplate").append(code);

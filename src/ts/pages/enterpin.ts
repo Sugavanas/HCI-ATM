@@ -125,7 +125,6 @@ export class EnterPin
                     let a : number; // = dummyAccounts.getInstance().getAccountByPin(pin);
                     if($("#AccountToLogin").length)
                     {
-                        console.log("account to login");
                         //Not the best coding practice, but saves time.
                         a = dummyAccounts.i().getAccountByNumber($("#AccountToLogin").val().toString());
                         if(a == -1 || pin !== dummyAccounts.i().getAccount(a).pinCode)
@@ -148,7 +147,6 @@ export class EnterPin
                     else
                     {
                         m.unbindKeyboardListener("pinBoxes");
-                        console.log(a);
                         dummyAccounts.i().loggedInAccount(a);
                         Menu.load().finally(() => resolve());
                     }

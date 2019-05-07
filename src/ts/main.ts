@@ -9,10 +9,12 @@ $(document).ready(function() {
 });
 
 export class Main {
+    static baseUrl = "/"; // "http://159.65.69.18/HCI/";
     static get(page : string) : Promise<object>
     {
         return new Promise(function(resolve, reject) { 
-            $.get("/pages/" + page, function(data){
+            $.get(Main.baseUrl + "/pages/" + page, function(data){
+                console.log(page);
                 resolve(data);
             }).fail(function(){
                 reject("Unexpected");
@@ -20,9 +22,13 @@ export class Main {
         });
     }
 
-    static loadContent(content : string)  : void
+    static loadContent(content : string)  : Promise<void>
     {
-        $("#content").html(content);
+        return new Promise(function(resolve, reject) { 
+            $("#content").html(content);
+            resolve();
+        });
+       
     }
 
     static processTpl(tpl : string, array) : string
@@ -36,8 +42,9 @@ export class Main {
         return new Promise(function(resolve, reject) { 
             Main.get(page).then(template => {
                 //TODO: resolve after loading content to prevent errors if there is a delay.
-                Main.loadContent(Main.processTpl(template.toString(), arrayVal));
-                resolve();
+                Main.loadContent(Main.processTpl(template.toString(), arrayVal)).then(() => {
+                    resolve();
+                });
             }).catch(error => reject(error));
         });
     }
@@ -66,22 +73,17 @@ export class Main {
 
     static initialLoad() : void
     {
-        Main.loadBackground();
-        Pages.splash();
-    }
-
-    static loadBackground() : void
-    {
-        this.get("background.html").then(template => {
-            $("body").removeClass("background");
-            $("body").addClass("background").html($(template).filter('#tplContent').html());
-            Main.loadIncludes();
-         });
+        Pages.loadBackground().then(
+            ()=> {
+                Pages.splash();
+            }
+        );
+        
     }
 
     static loadIncludes() : void
     {
-        $.get("/includes/numpad.html", function(template){
+        $.get(Main.baseUrl + "/includes/numpad.html", function(template){
             $("#numPadTemplate").html(template);
           });
     }
@@ -101,7 +103,7 @@ export class Main {
     {
         let btn = $("#" + id);
         console.log(btn);
-        if(btn != null)
+        if(btn.length)
             btn.off("click").on("click", function(){
                 callback(params)
             });
@@ -165,7 +167,8 @@ export class Main {
             Main.showLoader("Quitting?", new Promise(function(resolve, reject) {
                 setTimeout(function(){
                     Main.initialLoad();
-                    resolve();
+                    //location.reload();
+                    //resolve();
                 }, 1000);
             }));
         } else if(page == "menu")
