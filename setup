@@ -3,8 +3,16 @@ Install Node JS: https://nodejs.org/dist/v10.15.3/node-v10.15.3-x64.msi
 and run command in HCI folder: 
 
 npm install
+
+Once everything is installed, just run
+
 gulp default
 
+And then go to http://localhost:8080 
+The website should automatically reload every time there you make a change and save it. 
+
+
+Reference commands
 --------------------------------------------------------------------------
 npm install --save-dev browserify tsify vinyl-source-stream gulp typescript 
 npm install --save-dev gulp-connect
