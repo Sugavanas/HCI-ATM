@@ -27,7 +27,7 @@ export class Pages { //implements Page {
     static splash() : void
     {
         /*
-        dummyAccounts.getInstance().loggedInAccount(dummyAccounts.getInstance().getAccountByPin("123456"));
+        dummyAccounts.i().loggedInAccount(dummyAccounts.i().getAccountByPin("123456"));
         Menu.load().then();
         return; */
         m.getAndLoad("splash.html",  {"title" : "Some Bank"})
@@ -212,8 +212,10 @@ export class Pages { //implements Page {
              dummyAccounts.i().addToBalance(fromAccount, accountType, -parseFloat(withdrawAmount));
             //For Debugging
             console.log("Withdraw", dummyAccounts.i().getAccountNumberByType(fromAccount, accountType), accountType, withdrawAmount);
-
-            Pages.askReceiptPage().finally(resolve);
+            setTimeout(function() {
+                Pages.askReceiptPage().finally(resolve);
+            }, 500)
+           
         });
     }
 
@@ -253,7 +255,7 @@ export class Pages { //implements Page {
                             else
                             {
                                 $.toast({
-                                    text: s.lowBalance,
+                                    text: s.lowBalance +  dummyAccounts.i().getAccountBalance(accountType),
                                     position: 'bottom-center',
                                     stack: false,
                                     allowToastClose: true

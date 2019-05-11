@@ -55,6 +55,7 @@ export class dummyAccounts {
 
     public addToBalance(account: Account, accSelection: AccountTypes, amount: number) 
     {
+        account = this.getAccount(this.getAccountByNumber(account.accNumberSavings));
         console.log("updateBalance", amount, accSelection, account);
         if (accSelection == AccountTypes.Current)
             account.currentAccountBalance += amount;

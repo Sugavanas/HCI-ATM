@@ -1,5 +1,5 @@
 interface JQuery {
-    pinpad(options?: any, callback?: Function) : any;
+   // pinpad(options?: any, callback?: Function) : any;
  }
 
  interface JQueryStatic {

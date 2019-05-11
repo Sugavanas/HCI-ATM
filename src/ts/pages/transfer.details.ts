@@ -131,7 +131,7 @@ export class TransferDetails {
                     else
                     {
                         $.toast({
-                            text: s.lowBalance,
+                            text: s.lowBalance +  dummyAccounts.i().getAccountBalance(fromAccountType),
                             position: 'bottom-center',
                             stack: false,
                             allowToastClose: true

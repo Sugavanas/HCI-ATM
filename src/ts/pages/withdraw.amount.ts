@@ -120,7 +120,7 @@ export class Withdraw {
                     else
                     {
                         $.toast({
-                            text: s.lowBalance,
+                            text: s.lowBalance +  dummyAccounts.i().getAccountBalance(accountType),
                             position: 'bottom-center',
                             stack: false,
                             allowToastClose: true
