@@ -81,7 +81,7 @@ export class dummyAccounts {
 
     public getAccountNumberByType(a : Account, accSelection : AccountTypes) : string
     {
-        if(accSelection = AccountTypes.Current)
+        if(accSelection == AccountTypes.Current)
             return a.accNumberCurrent;
         else
             return a.accNumberSavings;
