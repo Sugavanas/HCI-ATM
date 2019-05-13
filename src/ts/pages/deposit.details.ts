@@ -16,8 +16,13 @@ export class DepositDetails {
                                                         "AccountSelection" : JSON.stringify(depositAccountSelection),
                                                         "OldAmount" : oldAmount})
             .then(() => {
-                m.addDefaultCancelBtn("menu");
-            
+                if(oldAmount === 0)
+                    m.addDefaultCancelBtn("menu");
+                else
+                    m.addCancelBtn(function() {
+                        m.showLoader("Processing", Pages.depositConfirm(depositAccount, depositAccountSelection, oldAmount.toString()));
+                    }, "Go Back");
+
                 DepositDetails.bindKeyBoardListener();
 
                 $("#inputAmount").on("change", function() {

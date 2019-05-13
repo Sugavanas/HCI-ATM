@@ -145,7 +145,7 @@ export class Pages { //implements Page {
                 m.addDefaultCancelBtn("menu");
 
                 m.addBtnListener("addCash", function() {
-                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, depositAmount)); //TODO: addcash cancel return back to this page
+                    m.showLoader("Loading", DepositDetails.load(depositAccount, depositAccountSelection, depositAmount));
                 });
                 
                 m.addBtnListener("confirmTransaction", function() {

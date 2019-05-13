@@ -1,7 +1,11 @@
 <tpl id="tplContent">
     <style>
+        .accountInfo {
+            margin: auto;
+            margin-top: 5%;
+        }
+
         .accountInfo table {
-            margin-top:5%;
             font-size: 25px;
         }
 
@@ -11,7 +15,10 @@
     </style>
     <div class="container">
         <!-- Show the old amount in a seperate field -->       
-        <div class="accountInfo">
+        <div class="bg-box accountInfo">
+                <!-- Copying the whole thing into if/else cause the last row always shows up 
+                    idk why it didn't work before, and idk why it works this way-->
+                {{#OldAmount}}
                 <table>
                     <tr>
                         <td style="float:right;">Name :</td>
@@ -21,8 +28,24 @@
                         <td style="float:right;">Account Number :</td>
                         <td style="padding-left: 5px;">{{AccountNumber}}</td>
                     </tr>
-                    
+                    <tr>
+                            <td style="float:right;">Currently Deposited Amount :</td>
+                            <td style="padding-left: 5px;">RM {{OldAmount}}</td>
+                    </tr>
                 </table>
+                {{/OldAmount}}
+                {{^OldAmount}}
+                <table>
+                    <tr>
+                        <td style="float:right;">Name :</td>
+                        <td style="padding-left: 5px;">{{AccountName}}</td>
+                    </tr>
+                    <tr>
+                        <td style="float:right;">Account Number :</td>
+                        <td style="padding-left: 5px;">{{AccountNumber}}</td>
+                    </tr>
+                </table>
+                {{/OldAmount}}
         </div>
 
         <div class="centerBox">

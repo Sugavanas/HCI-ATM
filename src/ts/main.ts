@@ -140,11 +140,14 @@ export class Main {
         $(document).unbind("keydown." + id);
     }
 
-    static addCancelBtn(callback? : Function)
+    static addCancelBtn(callback? : Function, text? : string)
     {
         if($('#btnBottomCancel').length == 0)
             $("#content").append('<button class="btn btn-danger btnBottomLeft" id="btnBottomCancel">Cancel</button>');
 
+        if(text !== null)
+            $("#btnBottomCancel").html(text);
+            
         $('#btnBottomCancel').unbind("click");
 
         Main.addBtnListener("btnBottomCancel", callback); 

@@ -156,6 +156,10 @@ content{
   }
  
 /** Button CSS **/
+.btn {
+	border-radius: 0;
+	font-size: 20px;
+}
 
 .btnBottomRight {
 	position: fixed;
@@ -167,6 +171,7 @@ content{
 	position: fixed;
 	left: 3vw;
 	bottom: 5vh;
+	min-width: 100px;
 }
 
 .btnCenter {
@@ -277,11 +282,22 @@ content{
 	left: 50%;
 	transform: translate(-50%, -50%);
 	position: fixed;
+	background: rgba(0,0,0,0.3);
+	border-radius: 15px;
+	padding: 5%;
 }
 
 .centerBox > p {
 	margin-bottom: 2vh;
 	text-align: center;
+}
+
+.bg-box
+{
+	background: rgba(0,0,0,0.3);
+	border-radius: 15px;
+	padding: 15px;
+	width: 100%;
 }
 
 /** Enter Amount Pages **/

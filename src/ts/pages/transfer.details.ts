@@ -127,7 +127,7 @@ export class TransferDetails {
                     if(total <= dummyAccounts.i().getAccountBalance(fromAccountType))
                     {
                         m.unbindKeyboardListener("transferAmount");
-                        m.showLoader("Processing", Pages.transferConfirm(toAccount, toAccountType, fromAccountType, total.toString()));
+                        m.showLoader("Processing", Pages.transferConfirm(toAccount, toAccountType, fromAccountType, total.toFixed(2).toString()));
                     }
                     else
                     {
