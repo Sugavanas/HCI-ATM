@@ -95,11 +95,26 @@ export class Menu {
                     });
 
                     m.addDefaultCancelBtn();
+                    
+                    Menu.updateTIme();
                 } else {
                     reject("This was bad");
                 }
                 resolve();
             }).catch(reject);
         });
+    }
+
+    static updateTIme(){
+        var now = new Date();
+        $("#displayTime").html(Menu.padTime(now.getHours()) + ':' + Menu.padTime(now.getMinutes())  + ':' + Menu.padTime(now.getSeconds()));
+        setTimeout(function(){
+            Menu.updateTIme(); //recursive
+        }, 1000);
+    }
+
+    static padTime(value : number){
+        var zero = 2 - value.toString().length + 1;
+        return Array(+(zero > 0 && zero)).join("0") + value;
     }
 }
