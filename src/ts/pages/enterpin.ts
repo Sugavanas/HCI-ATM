@@ -116,12 +116,12 @@ export class EnterPin
         static confirm() : void
         {
             $("#error").css("display", "none");
-            Main.showLoader("Loading", new Promise(function(resolve, reject) {
-                var pin : string =  $("#pinNumber").val().toString();
+            var pin : string =  $("#pinNumber").val().toString();
 
                 
-                if(pin.length >= EnterPin.pinNumber.maxChar)
-                {
+            if(pin.length >= EnterPin.pinNumber.maxChar)
+            {
+                Main.showLoader("Loading", new Promise(function(resolve, reject) {
                     let a : number; // = dummyAccounts.getInstance().getAccountByPin(pin);
                     if($("#AccountToLogin").length)
                     {
@@ -150,10 +150,8 @@ export class EnterPin
                         dummyAccounts.i().loggedInAccount(a);
                         Menu.load().finally(() => resolve());
                     }
-                    
-                }
-            }));
-           
+                }));
+            }
         }
 
         static clear() : void

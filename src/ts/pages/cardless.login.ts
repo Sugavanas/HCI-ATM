@@ -117,10 +117,10 @@ export class CardlessLogin { //this page is used for both transfer and deposit
         static confirm() : void
         {
             $("#error").css("display", "none");
-            m.showLoader("Processing", new Promise(function(resolve, reject) {
-                var accountNumber : string =  $("#accountNumber").val().toString();
-                if(accountNumber.length >= CardlessLogin.accountNumber.maxChar)
-                {
+            var accountNumber : string =  $("#accountNumber").val().toString();
+            if(accountNumber.length >= CardlessLogin.accountNumber.maxChar)
+            {
+                m.showLoader("Processing", new Promise(function(resolve, reject) {
                     let a : number = dummyAccounts.i().getAccountByNumber(accountNumber);
                     if(a == -1)
                     {
@@ -136,9 +136,8 @@ export class CardlessLogin { //this page is used for both transfer and deposit
                         m.unbindKeyboardListener("accountNumberBoxes");
                         EnterPin.load(accountNumber).then(resolve).catch(reject);                 
                     }
-                }
-            }));
-           
+                }));
+            }
         }
 
         static clear() : void

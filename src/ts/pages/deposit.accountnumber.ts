@@ -120,12 +120,12 @@ export class DepositAccountNumber { //this page is used for both transfer and de
         static confirm() : void
         {
             $("#error").css("display", "none");
-            m.showLoader("Processing", new Promise(function(resolve, reject) {
-                var accountNumber : string =  $("#accountNumber").val().toString();
-                let transfer : boolean = ($("#depositOrTransfer").val().toString() == "true");
-                let transferFromAccSelection : AccountTypes =  (transfer ? JSON.parse($("#transferFromAccSelection").val().toString()) : null);
-                if(accountNumber.length >= DepositAccountNumber.accountNumber.maxChar)
-                {
+            var accountNumber : string =  $("#accountNumber").val().toString();
+            let transfer : boolean = ($("#depositOrTransfer").val().toString() == "true");
+            let transferFromAccSelection : AccountTypes =  (transfer ? JSON.parse($("#transferFromAccSelection").val().toString()) : null);
+            if(accountNumber.length >= DepositAccountNumber.accountNumber.maxChar)
+            {
+                m.showLoader("Processing", new Promise(function(resolve, reject) {
                     let a : number = dummyAccounts.i().getAccountByNumber(accountNumber);
                     if(a == -1)
                     {
@@ -145,10 +145,9 @@ export class DepositAccountNumber { //this page is used for both transfer and de
                             TransferDetails.load(account, dummyAccounts.i().getTypeByAccountNumber(accountNumber), transferFromAccSelection).finally(resolve);
                         else
                             DepositDetails.load(account, dummyAccounts.i().getTypeByAccountNumber(accountNumber)).finally(resolve);  
-                    }
-                }
-            }));
-           
+                    } 
+                }));
+            }
         }
 
         static clear() : void
