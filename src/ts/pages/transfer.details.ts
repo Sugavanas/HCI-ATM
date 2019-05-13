@@ -13,7 +13,8 @@ export class TransferDetails {
                                                         "toAccountObjectJSON" : JSON.stringify(toAccount),
                                                         "toAccountType" : JSON.stringify(toAccountType),
                                                         "fromAccountType" : JSON.stringify(fromAccountType),
-                                                        "fromAccountObject" : dummyAccounts.i().loggedInAccount()})
+                                                        "fromAccountObject" : dummyAccounts.i().loggedInAccount(),
+                                                        "toAccountNumber" : dummyAccounts.i().getAccountNumberByType(toAccount, toAccountType)})
             .then(() => {
                 m.addDefaultCancelBtn("menu");
             

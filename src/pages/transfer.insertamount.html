@@ -1,12 +1,28 @@
 <tpl id="tplContent">
     <style>
+        .accountInfo table {
+            margin-top:5%;
+            font-size: 25px;
+        }
 
+        .centerBox p{
+            font-size: 20px;
+        }
     </style>
     <div class="container">
-        <!-- Show the old amount in a seperate field -->
-        Name : {{toAccountObject.displayName}}
-        Account Number : {{toAccountObject.accNumber}}
-
+        <div class="accountInfo">
+            <table>
+                <tr>
+                    <td style="float:right;">Name :</td>
+                    <td style="padding-left: 5px;">{{toAccountObject.displayName}}</td>
+                </tr>
+                <tr>
+                    <td style="float:right;">Account Number :</td>
+                    <td style="padding-left: 5px;">{{toAccountNumber}}</td>
+                </tr>
+                
+            </table>
+        </div>
         <div class="centerBox">
             <p>Transfer Amount</p>
             <input type=text id="inputAmountMask" class="amountInput" readonly="readonly" />

@@ -1,15 +1,35 @@
 <tpl id="tplContent">
     <style>
-        
+        .accountInfo table {
+            margin-top:5%;
+            font-size: 25px;
+        }
+
+        .centerBox p{
+            font-size: 20px;
+        }
     </style>
     <div class="container">
-        <!-- Show the old amount in a seperate field -->
-        {{#OldAmount}} Add Cash {{/OldAmount}}
-        {{^OldAmount}} Insert Cash {{/OldAmount}}
-        Name : {{AccountName}}
-        Account Number : {{AccountNumber}}
+        <!-- Show the old amount in a seperate field -->       
+        <div class="accountInfo">
+                <table>
+                    <tr>
+                        <td style="float:right;">Name :</td>
+                        <td style="padding-left: 5px;">{{AccountName}}</td>
+                    </tr>
+                    <tr>
+                        <td style="float:right;">Account Number :</td>
+                        <td style="padding-left: 5px;">{{AccountNumber}}</td>
+                    </tr>
+                    
+                </table>
+        </div>
 
         <div class="centerBox">
+            <div style="margin-bottom: 15px; text-align: center;">
+                    {{#OldAmount}} Please Add Cash {{/OldAmount}}
+                    {{^OldAmount}} Please Insert Cash {{/OldAmount}}
+            </div>
             <p>Deposit Amount</p> 
             <input type=text id="inputAmountMask" class="amountInput" readonly="readonly"/>
             <input type=hidden id="inputAmount" />
