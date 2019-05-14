@@ -1,10 +1,32 @@
 <tpl id="tplContent">
     <style>
+        .centerBox {
+            width: 80%;
+        }
+        .centerBox table{
+            margin: 20px 10px;
+            padding: 10px;
+            font-size: 25px;
+        }
 
     </style>
     <div class="centerBox">
         <table>
-            
+            <tr>
+                <td style="">Name :</td>
+                <td style="padding-left: 5px;">  </td>
+                <td style="padding-left: 5px;">{{AccountName}}</td>
+            </tr>
+            <tr>
+                <td style="">Account Number :</td>
+                <td style="padding-left: 5px;">  </td>
+                <td style="padding-left: 5px;">{{AccountNumber}}</td>
+            </tr>
+            <tr>
+                <td style="">Amount :</td>
+                <td style="padding-left: 5px;">  </td>
+                <td style="padding-left: 5px;">RM {{transferAmount}}</td>
+            </tr>
         </table>
         <div class="btnDiv">
                 <button class="btn btn-info" id="editAmount">Edit Amount</button>
