@@ -1,11 +1,13 @@
 <tpl id="tplContent">
-    <style>
-
-    </style>
-    <div class="container">
-        <div class="Info">
-            {{Message}}
+        <style>
+    
+        </style>
+        <div class="container">
+            <div class="background-title">
+            </div>
+            <div class="centerBox">
+                <p>{{Message}}</p>
+                <p>{{#hasCard}}{{removeCardMessage}}{{/hasCard}}</p>
+            </div>
         </div>
-        {{#hasCard}}{{removeCardMessage}}{{/hasCard}}
-    </div>
 </tpl>

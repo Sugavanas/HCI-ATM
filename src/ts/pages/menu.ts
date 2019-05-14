@@ -94,7 +94,9 @@ export class Menu {
                         });
                     });
 
-                    m.addDefaultCancelBtn();
+                    m.addCancelBtn(function(){
+                        Pages.thankYouPage();
+                    });
                     
                     Menu.updateTIme();
                 } else {
