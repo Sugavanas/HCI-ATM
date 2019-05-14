@@ -2,18 +2,14 @@
     <style>
 
     </style>
-    <div class="container">
-        <!-- Show the old amount in a seperate field -->
-
-        <div class="centerBox">
-            <p>Withdraw Amount</p>
-            <input type=text id="inputAmountMask" class="amountInput" readonly="readonly" />
-            <input type=hidden id="inputAmount" />
-            <input type=hidden id="withdrawAccountType" value="{{AccountType}}" />
-            <div class="btnDiv">
-                <button class="btn btn-warning" id="clearAmount">Clear</button>
-                <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
-            </div>
+    <div class="centerBox">
+        <p>Withdraw Amount</p>
+        <input type=text id="inputAmountMask" class="amountInput" readonly="readonly" />
+        <input type=hidden id="inputAmount" />
+        <input type=hidden id="withdrawAccountType" value="{{AccountType}}" />
+        <div class="btnDiv">
+            <button class="btn btn-warning" id="clearAmount">Clear</button>
+            <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
         </div>
     </div>
 </tpl>

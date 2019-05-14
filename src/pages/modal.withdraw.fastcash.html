@@ -1,4 +1,10 @@
 <tpl id="tplContent">
+    <style>
+        .fastcash {
+            margin: 5px auto;
+            color: #fff;
+        }
+    </style>
     <div class="modal fade" id="{{fastcashModalID}}" tabindex="-1" role="dialog" aria-labelledby="{{fastcashModalID}}"
         aria-hidden="true">
         <div class="modal-dialog numpadModalDialog" role="document">
@@ -11,11 +17,15 @@
                 </div>
                 <div class="modal-body text-center">
                     <div class="container">
-                        <button class="btn btn-info fastCash" data-val="50">RM 50</button>
-                        <button class="btn btn-info fastCash" data-val="100">RM 100</button>
-                        <button class="btn btn-info fastCash" data-val="300">RM 300</button>
-                        <button class="btn btn-info fastCash" data-val="500">RM 500</button>
-                        <button class="btn btn-warning fastCash" data-val="0">Other Amount</button>
+                        <div class="row">
+                            <button class="btn btn-info fastCash" data-val="50">RM 50</button>
+                            <button class="btn btn-info fastCash" data-val="100">RM 100</button>
+                            <button class="btn btn-info fastCash" data-val="300">RM 300</button>
+                            <button class="btn btn-info fastCash" data-val="500">RM 500</button>
+                        </div>
+                        <div class="row">
+                            <button class="btn btn-warning fastCash" data-val="0">Other Amount</button>
+                        </div>
                     </div>
                 </div>
             </div>

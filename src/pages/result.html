@@ -2,18 +2,16 @@
     <style>
 
     </style>
-    <div class="container">
-        <div class="background-title">
-            {{#hasReceipt}}{{takeReceiptMessage}}{{/hasReceipt}}
-        </div>
-        {{#isLoggedin}}
-            <div class="centerBox">
-                <p>Do you want to continue?</p>
-                <div class="btnDiv">
-                        <button class="btn btn-success" id="resultNo">No</button>
-                        <button class="btn btn-success" id="resultYes">Yes</button>
-                </div>
-            </div>
-        {{/isLoggedin}}
+    <div class="background-title">
+        {{#hasReceipt}}{{takeReceiptMessage}}{{/hasReceipt}}
     </div>
+    {{#isLoggedin}}
+        <div class="centerBox">
+            <p>Do you want to continue?</p>
+            <div class="btnDiv">
+                    <button class="btn btn-success" id="resultNo">No</button>
+                    <button class="btn btn-success" id="resultYes">Yes</button>
+            </div>
+        </div>
+    {{/isLoggedin}}
 </tpl>

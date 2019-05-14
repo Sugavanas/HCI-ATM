@@ -1,10 +1,20 @@
 <tpl id="tplContent">
     <style>
         .accountInfo {
-            margin: auto;
-            margin-top: 5%;
+            /*position: fixed;
+            top: 5%;
+            left: 10%;
+            transform: translate(-2.5%, -5%);*/
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 10px;
         }
-
+        
+        .centerBox {
+            margin: 0 auto;
+            margin-top: 10vh;
+        }
+        
         .accountInfo table {
             font-size: 25px;
         }
@@ -13,56 +23,56 @@
             font-size: 20px;
         }
     </style>
-    <div class="container">
-        <!-- Show the old amount in a seperate field -->       
-        <div class="bg-box accountInfo">
-                <!-- Copying the whole thing into if/else cause the last row always shows up 
-                    idk why it didn't work before, and idk why it works this way-->
-                {{#OldAmount}}
-                <table>
-                    <tr>
-                        <td style="float:right;">Name :</td>
-                        <td style="padding-left: 5px;">{{AccountName}}</td>
-                    </tr>
-                    <tr>
-                        <td style="float:right;">Account Number :</td>
-                        <td style="padding-left: 5px;">{{AccountNumber}}</td>
-                    </tr>
-                    <tr>
-                            <td style="float:right;">Currently Deposited Amount :</td>
-                            <td style="padding-left: 5px;">RM {{OldAmount}}</td>
-                    </tr>
-                </table>
-                {{/OldAmount}}
-                {{^OldAmount}}
-                <table>
-                    <tr>
-                        <td style="float:right;">Name :</td>
-                        <td style="padding-left: 5px;">{{AccountName}}</td>
-                    </tr>
-                    <tr>
-                        <td style="float:right;">Account Number :</td>
-                        <td style="padding-left: 5px;">{{AccountNumber}}</td>
-                    </tr>
-                </table>
-                {{/OldAmount}}
-        </div>
+    
+    <!-- Show the old amount in a seperate field -->       
+    <div class="bg-box accountInfo">
+            <!-- Copying the whole thing into if/else cause the last row always shows up 
+                idk why it didn't work before, and idk why it works this way-->
+            {{#OldAmount}}
+            <table>
+                <tr>
+                    <td style="float:right;">Name :</td>
+                    <td style="padding-left: 5px;">{{AccountName}}</td>
+                </tr>
+                <tr>
+                    <td style="float:right;">Account Number :</td>
+                    <td style="padding-left: 5px;">{{AccountNumber}}</td>
+                </tr>
+                <tr>
+                        <td style="float:right;">Currently Deposited Amount :</td>
+                        <td style="padding-left: 5px;">RM {{OldAmount}}</td>
+                </tr>
+            </table>
+            {{/OldAmount}}
+            {{^OldAmount}}
+            <table>
+                <tr>
+                    <td style="float:right;">Name :</td>
+                    <td style="padding-left: 5px;">{{AccountName}}</td>
+                </tr>
+                <tr>
+                    <td style="float:right;">Account Number :</td>
+                    <td style="padding-left: 5px;">{{AccountNumber}}</td>
+                </tr>
+            </table>
+            {{/OldAmount}}
+    </div>
 
-        <div class="centerBox">
-            <div style="margin-bottom: 15px; text-align: center;">
-                    {{#OldAmount}} Please Add Cash {{/OldAmount}}
-                    {{^OldAmount}} Please Insert Cash {{/OldAmount}}
-            </div>
-            <p>Deposit Amount</p> 
-            <input type=text id="inputAmountMask" class="amountInput" readonly="readonly"/>
-            <input type=hidden id="inputAmount" />
-            <input type=hidden id="depositAccountNumber" value="{{AccountObject}}" />
-            <input type=hidden id="depositAccountSelection" value="{{AccountSelection}}" />
-            {{#OldAmount}}<input type=hidden id="depositOldAmount" value="{{OldAmount}}" /> {{/OldAmount}}
-            <div class="btnDiv">
-                <button class="btn btn-warning" id="clearAmount">Clear</button>
-                <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
-            </div>
+    <div class="centerBox">
+        <div style="margin-bottom: 15px; text-align: center;">
+                {{#OldAmount}} Please Add Cash {{/OldAmount}}
+                {{^OldAmount}} Please Insert Cash {{/OldAmount}}
+        </div>
+        <p>Deposit Amount</p> 
+        <input type=text id="inputAmountMask" class="amountInput" readonly="readonly"/>
+        <input type=hidden id="inputAmount" />
+        <input type=hidden id="depositAccountNumber" value="{{AccountObject}}" />
+        <input type=hidden id="depositAccountSelection" value="{{AccountSelection}}" />
+        {{#OldAmount}}<input type=hidden id="depositOldAmount" value="{{OldAmount}}" /> {{/OldAmount}}
+        <div class="btnDiv">
+            <button class="btn btn-warning" id="clearAmount">Clear</button>
+            <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
         </div>
     </div>
+    
 </tpl>

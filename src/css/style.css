@@ -2,10 +2,37 @@ body{
 
 }
 
-content{
+#content{
     display: block;
-    padding: 10px 10px;
+	padding: 10px 10px;
+	display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+	display: -ms-flexbox;  /* TWEENER - IE 10 */
+	display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+	display: flex;    
+	height: 100vh;
+	flex-direction: column;
+	overflow-y: auto;
 }
+
+
+#content::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#content::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+#content::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+	border: 2px solid #555555;
+}
+
 
 /** Background **/
 
@@ -38,11 +65,8 @@ content{
 }
 
 .pageContent {
-	top:50%;
-	left:50%;
-	transform: translate(-50%, -50%);
-	position: absolute;
 	display: block;
+	margin: auto;
 }
 
 .title {
@@ -278,13 +302,14 @@ content{
 .centerBox {
 	font-size: 30px;
 	padding: 25px 0;
-	top: 50%;
+	/*top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	position: fixed;
+	position: fixed;*/
 	background: rgba(0,0,0,0.3);
 	border-radius: 15px;
-	padding: 1%;
+	padding: 15px;
+	margin: auto;
 }
 
 .centerBox > p {
@@ -309,3 +334,4 @@ content{
 	padding-bottom: 3vh;
 	text-align: center;
 }
+
