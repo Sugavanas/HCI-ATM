@@ -109,7 +109,7 @@ export class NumPad{
             else if(key === 8)
                 instance.backspace()
             else if(key === 13)
-                instance.confirmC();
+                instance.confirm();
             else if(key === 27)
                 instance.cancelC();
             else
