@@ -57,6 +57,9 @@ export class DepositAccountNumber { //this page is used for both transfer and de
                     m.addDefaultCancelBtn("menu");
                 else
                     m.addDefaultCancelBtn();
+
+                m.addNumPadToolTip("accountNumberBoxes");
+
                 resolve();
            });
         });

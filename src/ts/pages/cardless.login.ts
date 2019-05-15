@@ -54,6 +54,9 @@ export class CardlessLogin { //this page is used for both transfer and deposit
                 });
                 
                 m.addDefaultCancelBtn();
+
+                m.addNumPadToolTip("accountNumberBoxes");
+                
                 resolve();
            });
         });

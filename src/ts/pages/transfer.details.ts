@@ -56,6 +56,9 @@ export class TransferDetails {
 
                 m.addBtnListener("confirmAmount", TransferDetails.transferAmount.confirm);
                 m.addBtnListener("clearAmount",  TransferDetails.transferAmount.clear);
+
+                m.addNumPadToolTip("inputAmountMask");
+
                 resolve();
             }).catch(reject);
         });

@@ -52,6 +52,8 @@ export class EnterPin
                 });
                 
                 m.addDefaultCancelBtn();
+
+                m.addNumPadToolTip("pinBoxes");
                
                 resolve();               
             }).catch(error => reject(error));

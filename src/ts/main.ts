@@ -3,6 +3,7 @@
 
 import {Pages} from "./pages";
 import {Menu} from "./pages/menu";
+import { s } from './data/s';
 
 $(document).ready(function() {
     Main.initialLoad();
@@ -55,8 +56,9 @@ export class Main {
 
     static showLoader(text : string, runFunction : Promise<object>, callback? : Function) : void {
         $("#loading-text").html(text);
-        $("#loading").css("display", "block");
-                
+        $("#loading").css("display", "block"); 
+        $(".tooltip").remove();
+                    
         if(callback == null)
             callback = function() {};
 
@@ -177,5 +179,13 @@ export class Main {
         {
             Main.showLoader("Cancelling", Menu.load());
         }
+    }
+
+    static addNumPadToolTip(id : string)
+    {
+        $('#' + id).data("toggle", "tooltip").data("title", s.openNumpad).data("placement", "right").tooltip("show");
+        setTimeout(() => {
+            $('#' + id).tooltip("hide");
+        }, 3000);
     }
 }

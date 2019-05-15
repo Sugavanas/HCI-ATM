@@ -42,6 +42,9 @@ export class Withdraw {
 
                 m.addBtnListener("confirmAmount", Withdraw.Amount.confirm);
                 m.addBtnListener("clearAmount",  Withdraw.Amount.clear);
+
+                m.addNumPadToolTip("inputAmountMask");
+                
                 resolve();
             }).catch(reject);
         });

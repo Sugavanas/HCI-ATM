@@ -51,6 +51,9 @@ export class DepositDetails {
 
                 m.addBtnListener("confirmAmount", DepositDetails.depsoitAmount.confirm);
                 m.addBtnListener("clearAmount", DepositDetails.depsoitAmount.clear);
+
+                m.addNumPadToolTip("inputAmountMask");
+                
                 resolve();
             }).catch(reject);
         });
