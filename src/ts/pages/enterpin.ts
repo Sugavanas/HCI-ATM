@@ -5,6 +5,7 @@ import {dummyAccounts, Account} from './../data/account';
 import { Menu } from './menu';
 export class EnterPin
 {
+    static noOfTries = 0; //bad practice but works.
     static load(accNumber? : string) : Promise<object>
     {
         return new Promise(function(resolve, reject){
@@ -143,7 +144,27 @@ export class EnterPin
                         setTimeout(() => {
                             $("#error").html("Invalid Pin. Please try again.").css("display", "block");
                             EnterPin.pinNumber.clear();
-                            resolve();
+                            EnterPin.noOfTries++;
+                            if( EnterPin.noOfTries >= 3)
+                            {
+                                Main.unbindKeyboardListener("");
+                                m.getAndLoad("logout.html", {"Message" : "Your account is locked. Please contact the bank by calling +603-1234 5678.", "hasCard" :false})
+                                .then(() => {
+                                    resolve();
+                                    $.toast({
+                                        text: "Page will refresh automatically in 5 seconds.",
+                                        position: 'bottom-center',
+                                        stack: false,
+                                        allowToastClose: true
+                                    })
+                                    setTimeout(() => {                
+                                        location.reload();
+                                        Main.initialLoad();
+                                    }, 5000);
+                                }).catch();
+                            }
+                            else
+                                resolve();
                         }, (500));
                     }
                     else

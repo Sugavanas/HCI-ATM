@@ -220,6 +220,10 @@ body{
 	margin-right: 10px;
 }
 
+.btn-warning, .btn-warning:hover {
+	color: #fff;
+}
+
 /** Alerts **/
 
 .alert {

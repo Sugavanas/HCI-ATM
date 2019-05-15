@@ -73,6 +73,17 @@
             float: right;
             font-size: 25px;
         }
+
+        .helpBtn {
+            width: 45px;
+            height: 45px;
+            padding: 6px 0px;
+            border-radius: 22.5px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.42857;
+            font-size: 20px;
+        }
     </style>
     <div class="container">
         <div class="menu-header">
@@ -124,6 +135,22 @@
                             Others
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-warning btnBottomRight helpBtn" data-toggle="modal" data-target="#helpModal">?</button>
+        <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true" style="color:#000;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">Help</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="font-size: 15px">
+                    Call +603-1234 5678 for support if you are facing any problem.
+                </div>
                 </div>
             </div>
         </div>
