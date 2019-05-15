@@ -25,7 +25,10 @@ export class Pages { //implements Page {
 
 
     static splash() : void
-    {
+    {/*
+        dummyAccounts.i().loggedInAccount(dummyAccounts.i().getAccountByPin("123456"));
+        Pages.depositConfirm(dummyAccounts.i().getAccount(dummyAccounts.i().getAccountByNumber("222222222")),  AccountTypes.Savings, "100");
+        return;
         /*
         dummyAccounts.i().loggedInAccount(dummyAccounts.i().getAccountByPin("123456"));
         Menu.load().then();
@@ -33,18 +36,22 @@ export class Pages { //implements Page {
         m.getAndLoad("splash.html",  {"title" : "Some Bank"})
             .then(data => {
                 m.addBtnListener("insertCard", function(){
-                    m.showLoader("Loading", EnterPin.load());
+                    Pages.languageModal().then(() => {
+                        m.showLoader("Loading", EnterPin.load());
+                    });
                 });    
                 m.addBtnListener("clearData", function(){
                     dummyAccounts.i().clear();
                 });    
                 m.addBtnListener("touchOverlay", function() {
-                    Pages.cardlessModal().then(data => {
-                        if(data === "CDM")
-                            m.showLoader("Loading", DepositAccountNumber.load());
-                        else if(data === "ATM")
-                            m.showLoader("Loading", CardlessLogin.load());   
-                    }).catch(() => {});
+                    Pages.languageModal().then(() => {
+                        Pages.cardlessModal().then(data => {
+                            if(data === "CDM")
+                                m.showLoader("Loading", DepositAccountNumber.load());
+                            else if(data === "ATM")
+                                m.showLoader("Loading", CardlessLogin.load());   
+                        }).catch(() => {});
+                    });
                 });
             })
             .catch(error => {
@@ -82,6 +89,40 @@ export class Pages { //implements Page {
         });
     }
 
+    static languageModal() : Promise<string>
+    {
+        return new Promise(function(resolve, reject){
+            var modalID = "languangeModal-" + Math.random().toString(36).substring(7);
+            //show modal
+            m.get("modal.language.html").then(data => {
+                var code = Main.processTpl(data.toString(), {"languageModalID": modalID});
+                $("#footer").append(code);
+
+                $("#" + modalID).modal('show');
+
+                $("#" + modalID).on('hidden.bs.modal', function () {
+                    reject();
+                    $(this).remove();
+                })
+                
+                $("#" + modalID).find("#aMalay").on("click", function() {
+                    $.toast({
+                        text: s.languageUnavailable,
+                        position: 'bottom-center',
+                        stack: false,
+                        allowToastClose: true
+                    });
+                });
+                
+                $("#" + modalID).find("#aEnglish").on("click", function() {
+                    resolve("english");
+                    $("#" + modalID).modal('hide');
+                });
+               
+            }).catch(error => { Main.loadErrorPage(error); reject(); })
+        });
+    }
+
     static depositSelection() : Promise<string>
     {
         return new Promise(function(resolve, reject){
@@ -111,6 +152,7 @@ export class Pages { //implements Page {
             }).catch(error => { Main.loadErrorPage(error); reject(); })
         });
     }
+    
 
     static depositConfirm(depositAccount : Account, depositAccountSelection : AccountTypes, depositAmount : string) : Promise<object>
     {

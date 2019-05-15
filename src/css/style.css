@@ -335,3 +335,8 @@ body{
 	text-align: center;
 }
 
+.jq-toast-single {
+	font-size: 18px !important;
+	line-height: 20px !important;
+	text-align: center !important;
+}
