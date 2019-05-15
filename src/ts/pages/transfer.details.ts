@@ -5,7 +5,7 @@ import {dummyAccounts, Account, AccountTypes} from '../data/account';
 import { Pages } from '../pages';
 
 export class TransferDetails {
-    static load(toAccount : Account, toAccountType : AccountTypes, fromAccountType : AccountTypes, oldAmount : any = null) : Promise<object>
+    static load(toAccount : Account, toAccountType : AccountTypes, fromAccountType : AccountTypes, oldAmount : any = 0) : Promise<object>
     {
         return new Promise(function(resolve, reject){
             
@@ -16,7 +16,12 @@ export class TransferDetails {
                                                         "fromAccountObject" : dummyAccounts.i().loggedInAccount(),
                                                         "toAccountNumber" : dummyAccounts.i().getAccountNumberByType(toAccount, toAccountType)})
             .then(() => {
-                m.addDefaultCancelBtn("menu");
+                if(oldAmount === 0)
+                    m.addDefaultCancelBtn("menu");
+                else
+                    m.addCancelBtn(function() {
+                        m.showLoader("Loading", Pages.transferConfirm(toAccount, toAccountType, fromAccountType, parseFloat((oldAmount.substr(0, oldAmount.length - 2) + "." +  oldAmount.substr(oldAmount.length - 2))).toFixed(2).toString()));
+                    }, "Go Back");
             
                 TransferDetails.bindKeyBoardListener();
 
@@ -39,7 +44,7 @@ export class TransferDetails {
                     else
                         $("#confirmAmount").attr("disabled", "true");
         
-                }).val(oldAmount).trigger("change");
+                }).trigger("change"); //.val(oldAmount).trigger("change");
 
                 m.addBtnListener("inputAmountMask", function() {
                     m.unbindKeyboardListener("transferAmount");
