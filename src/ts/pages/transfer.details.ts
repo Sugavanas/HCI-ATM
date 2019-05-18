@@ -140,7 +140,7 @@ export class TransferDetails {
                     else
                     {
                         $.toast({
-                            text: s.lowBalance +  dummyAccounts.i().getAccountBalance(fromAccountType),
+                            text: s.lowBalance +  dummyAccounts.i().getAccountBalance(fromAccountType).toFixed(2),
                             position: 'bottom-center',
                             stack: false,
                             allowToastClose: true

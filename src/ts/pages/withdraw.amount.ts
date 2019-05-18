@@ -44,7 +44,7 @@ export class Withdraw {
                 m.addBtnListener("clearAmount",  Withdraw.Amount.clear);
 
                 m.addNumPadToolTip("inputAmountMask");
-                
+
                 resolve();
             }).catch(reject);
         });
@@ -123,7 +123,7 @@ export class Withdraw {
                     else
                     {
                         $.toast({
-                            text: s.lowBalance +  dummyAccounts.i().getAccountBalance(accountType),
+                            text: s.lowBalance +  dummyAccounts.i().getAccountBalance(accountType).toFixed(2),
                             position: 'bottom-center',
                             stack: false,
                             allowToastClose: true

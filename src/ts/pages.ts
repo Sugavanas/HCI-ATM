@@ -303,7 +303,7 @@ export class Pages { //implements Page {
                             else
                             {
                                 $.toast({
-                                    text: s.lowBalance +  dummyAccounts.i().getAccountBalance(accountType),
+                                    text: s.lowBalance +  dummyAccounts.i().getAccountBalance(accountType).toFixed(2),
                                     position: 'bottom-center',
                                     stack: false,
                                     allowToastClose: true
