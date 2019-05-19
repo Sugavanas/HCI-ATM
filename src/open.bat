@@ -1,0 +1,1 @@
+start chrome.exe --user-data-dir="%cd%\chrome" --disable-web-security "%cd%\index.html"

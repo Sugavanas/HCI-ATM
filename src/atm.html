@@ -1,12 +1,10 @@
 <html>
     <head>
         <!-- Dev Code -->
-        <script>document.write('<script src="http://'
+        <!--  <script>document.write('<script src="http://'
             + (location.host || 'localhost').split(':')[0]
             + ':35729/livereload.js"></'
-            + 'script>')</script>
-
-        <!-- <script>var exports = {};</script> -->
+            + 'script>')</script> -->
 
         <script src="js/jquery.min.js"></script>
         <script src="js/mustache.min.js"></script>
@@ -25,17 +23,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <header>
-
-        </header>
         <content>
-            <div class="alert alert-primary" role="alert">
-                A simple primary alert—check it out!
-            </div>
+            <noscript>
+                <div class="alert alert-danger" role="alert">
+                    Please make sure your browser supports javascript.
+                </div>
+            </noscript>
+            Loading Page...
         </content>
-        <footer>
-        </footer>
-
     </body>
 </html>
 

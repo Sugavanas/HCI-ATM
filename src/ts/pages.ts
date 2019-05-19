@@ -29,7 +29,7 @@ export class Pages { //implements Page {
         dummyAccounts.i().loggedInAccount(dummyAccounts.i().getAccountByPin("123456"));
         Pages.depositConfirm(dummyAccounts.i().getAccount(dummyAccounts.i().getAccountByNumber("222222222")),  AccountTypes.Savings, "100");
         return;
-        /*
+        
         dummyAccounts.i().loggedInAccount(dummyAccounts.i().getAccountByPin("123456"));
         Menu.load().then();
         return; */

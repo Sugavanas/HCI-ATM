@@ -12,6 +12,6 @@ export class s {
     static readonly thankYou : string = "Thank you";
     static readonly removeCard : string = "Please take your card";
     static readonly functionUnavailable : string = "This function is currently unavailable.";
-    static readonly languageUnavailable : string = "(Type this in Malay?) This language is currently unavailable.";
+    static readonly languageUnavailable : string = "This language is currently unavailable.";
     static readonly openNumpad : string = "Tap here to open numpad";
 }

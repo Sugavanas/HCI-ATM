@@ -84,13 +84,17 @@
             line-height: 1.42857;
             font-size: 20px;
         }
+
+        #content        {
+            overflow: hidden;
+        }
     </style>
-    <div class="container">
+    <div class="container-fluid">
         <div class="menu-header">
             <div class="displayName">Welcome{{#displayName}}, {{displayName}}! {{/displayName}}</div>
             <div class="displayTime" id="displayTime">Current time</div>
         </div>
-        <div class="col-md-12" style="clear:both; max-width: 130vh; padding-top: 10px; margin: auto;">
+        <div class="col-md-12" style="clear:both; max-width: 125vh; padding-top: 10px; margin: 0 auto;">
             <div class="row">
                 <div class="col ">
                     <div class="menu-box" id="menu-withdraw">

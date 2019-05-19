@@ -1,7 +1,34 @@
+<!DOCTYPE html>
 <html>
+<head>
+    <title>ATM / CDM - HCI Assignment 1</title>
+    <script>
+        var isBox = true;
+        function changesize()
+        {
+            if(!isBox)
+            {
+                document.getElementById("divFrame").removeAttribute("style");
+                document.getElementById("divFrame").setAttribute("style", "min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px; margin: auto; overflow: hidden;");
+				document.getElementById("frame").removeAttribute("style");
+                document.getElementById("frame").setAttribute("style", "min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px;");
+                isBox = true;
+            }
+            else
+            {
+                document.getElementById("divFrame").removeAttribute("style");
+                document.getElementById("divFrame").setAttribute("style", "min-width: 1080px; min-height: 720px; max-width: 1080px; max-height: 720px; margin: auto; overflow: hidden;");
+				document.getElementById("frame").removeAttribute("style");
+                document.getElementById("frame").setAttribute("style", "min-width: 1080px; min-height: 720px; max-width: 1080px; max-height: 720px;");
+                isBox = false;
+            }
+        }       
+    </script>
+</head>
 <body>
-	<div style="min-width: 720px; min-height: 480px; max-width: 1280px; max-height: 720px; margin: auto; overflow: hidden;">
-		<iframe src="atm.html" style="width: 100%; height: 100%;"></iframe>
+	<button style="top: 5px; right: 5px; position:fixed;" id="size" onclick="changesize()">&#x3C;--&#x3E;</button>
+	<div id="divFrame" style="min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px; margin: auto; overflow: hidden;">
+		<iframe id="frame" src="atm.html" style="min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px;"></iframe>
 	</div>
 </body>
 </html>
