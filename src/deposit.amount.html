@@ -1,0 +1,267 @@
+<html>
+
+<head>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.toast.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/fontawesome.all.min.css" />
+    <link rel="stylesheet" href="css/jquery.toast.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Deposit Amount - ATM</title>
+    <style>
+        .accountInfo {
+            /*position: fixed;
+            top: 5%;
+            left: 10%;
+            transform: translate(-2.5%, -5%);*/
+            width: 80%;
+            margin: 0 auto;
+            margin-top: 10px;
+        }
+        
+        .centerBox {
+            margin: 0 auto;
+            margin-top: 10vh;
+        }
+        
+        .accountInfo table {
+            font-size: 25px;
+        }
+
+        .centerBox p{
+            font-size: 20px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var addC = function (val) {
+                var amount = $("#inputAmount").val().toString();
+                if (amount.length < 6) {
+                    $("#inputAmount").val(amount + val).trigger("change");
+                }
+                else
+                    $.toast({
+                        text: s.maxChars,
+                        position: 'bottom-center',
+                        stack: false,
+                        allowToastClose: true
+                    })
+                numPad.highlightKeysWhileTyping(val);
+            };
+            var clearC = function () {
+                $("#inputAmount").val("").trigger("change");
+            };
+            var backspaceC = function () {
+                $("#inputAmount").val(
+                    function (index, value) {
+                        return value.substr(0, value.length - 1);
+                    }).trigger('change');
+            };
+            var confirmC = function () {
+                var val = $("#inputAmount").val().toString();
+                if (val.length >= 1 && val.length <= 6) {
+                    Main.showLoader();
+                    var total = parseFloat(val);
+
+                    if (total < 1000000) {
+                        Main.redirect("deposit.confirmation.html");
+                    }
+                    else {
+                        $.toast({
+                            text: s.maxAmount,
+                            position: 'bottom-center',
+                            stack: false,
+                            allowToastClose: true
+                        });
+                        Main.hideLoader();
+                    }
+                }
+            };
+
+            Main.bindKeyboardListener("depositAmount", function (key) {
+                if (key >= 48 && key <= 57) //48 is 0 and 57 is 1
+                    addC(String.fromCharCode(key));
+                else if (key === 8)
+                    backspaceC();
+                else if (key === 13)
+                    confirmC();
+                else {
+                    $.toast({
+                        text: s.eNumbers,
+                        position: 'bottom-center',
+                        stack: false,
+                        allowToastClose: true
+                    })
+                }
+            });
+
+            $("#inputAmount").on("change", function () {
+                var val = $("#inputAmount").val().toString();
+                var amount = parseFloat(val);
+
+                if (isNaN(amount))
+                    amount = 0;
+
+                numPad.changeText(amount);
+
+                $("#inputAmountMask").val("RM " + amount.toFixed(2));
+
+                if (val.length >= 1 && val.length <= 6)
+                    $("#confirmAmount").removeAttr("disabled");
+                else
+                    $("#confirmAmount").attr("disabled", "true");
+
+            }).trigger("change");
+
+            Main.addBtnListener("inputAmountMask", function () {
+                $("#numPadModal").modal('show');
+            });
+
+            numPad.load(confirmC, function () { Main.defaultCancelCallback("menu"); }, clearC, 1, 6, true, false, false);
+
+            Main.addBtnListener("confirmAmount", confirmC);
+            Main.addBtnListener("clearAmount", clearC);
+
+            Main.addDefaultCancelBtn("menu");
+            Main.addNumPadToolTip("inputAmountMask");
+        });
+    </script>
+</head>
+
+<body class="background">
+    <div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+    <div id="content">
+        <div class="bg-box accountInfo">
+            <table>
+                <tr>
+                    <td style="float:right;">Name :</td>
+                    <td style="padding-left: 5px;">Jane Doe</td>
+                </tr>
+                <tr>
+                    <td style="float:right;">Account Number :</td>
+                    <td style="padding-left: 5px;">123456789</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="centerBox">
+            <div style="margin-bottom: 15px; text-align: center;">
+                Please Insert Cash
+            </div>
+            <p>Deposit Amount</p>
+            <input type=text id="inputAmountMask" class="amountInput" readonly="readonly" />
+            <input type=hidden id="inputAmount" />
+            <input type=hidden id="depositAccountNumber" value="{{AccountObject}}" />
+            <input type=hidden id="depositAccountSelection" value="{{AccountSelection}}" />
+            <div class="btnDiv">
+                <button class="btn btn-warning" id="clearAmount">Clear</button>
+                <button class="btn btn-success" id="confirmAmount" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="modal fade" id="numPadModal" tabindex="-1" role="dialog" aria-labelledby="numPadModal" aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <label for="numPadInput">Deposit Amount</label>
+                        <input type="text" id="numPadInputMask" class="form-control" autocomplete="off" disabled />
+                        <input type="hidden" id="numPadInput" class="form-control" autocomplete="off" />
+                        <div class="numpad" id="numpad">
+                            <div style="width: 65%; padding: 10px 5px; display:inline-block;">
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="1">1</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="2">2</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="3">3</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="4">4</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="5">5</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="6">6</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="7">7</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="8">8</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="9">9</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn">.</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="0">0</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadBackSpace"><i class="fas fa-backspace"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width:30%; display:inline-block; vertical-align: top; padding: 10px 0px;">
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+                                        <button class="btn btn-danger numPadCancel">Cancel</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+                                        <button class="btn btn-warning numPadClear">Clear</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+                                        <button class="btn btn-success numPadConfirm">Confirm</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading" class="loading">
+        <div class="overlay"></div>
+        <img class="loader-icon" src="webfonts/loading.svg" alt="Loader">
+        <div class="text-center loading-text" id="loading-text">Processing</div>
+    </div>
+</body>
+
+</html>

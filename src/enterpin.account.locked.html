@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.toast.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/fontawesome.all.min.css" />
+    <link rel="stylesheet" href="css/jquery.toast.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Account Locked - ATM</title>
+    <style>
+      
+    </style>
+    <script>
+        $(document).ready(function () {
+            $.toast({
+                text: "Page will refresh automatically in 5 seconds.",
+                position: 'bottom-center',
+                stack: false,
+                allowToastClose: true
+            })
+            setTimeout(() => {                
+                Main.redirect("index.html");
+            }, 5000);
+        });
+    </script>
+</head>
+
+<body class="background">
+    <div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+    <div id="content">
+        <div class="centerBox">
+            <p>Your account is locked. Please contact the bank by calling +603-1234 5678.</p>
+        </div>
+    </div>
+    <div id="footer">
+
+    </div>
+    <div id="loading" class="loading">
+        <div class="overlay"></div>
+        <img class="loader-icon" src="webfonts/loading.svg" alt="Loader">
+        <div class="text-center loading-text" id="loading-text">Loading</div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<html>
+
+<head>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.toast.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/fontawesome.all.min.css" />
+    <link rel="stylesheet" href="css/jquery.toast.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transfer Confirmation - ATM</title>
+    <style>
+      .centerBox {
+            width: 80%;
+        }
+        .centerBox table{
+            margin: 20px 10px;
+            padding: 10px;
+            font-size: 25px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            Main.addBtnListener("editAmount", function () {
+                $.toast({
+                    text: s.functionUnavailable,
+                    position: 'bottom-center',
+                    stack: false,
+                    allowToastClose: true
+                });
+            });
+
+            Main.addBtnListener("confirmTransaction", function () {
+               Main.redirect("result.html");
+            });
+
+            Main.addDefaultCancelBtn("menu");
+        });
+    </script>
+</head>
+
+<body class="background">
+    <div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+    <div id="content">
+            <div class="centerBox">
+                    <table>
+                        <tr>
+                            <td style="">Name :</td>
+                            <td style="padding-left: 5px;">  </td>
+                            <td style="padding-left: 5px;">John Doe</td>
+                        </tr>
+                        <tr>
+                            <td style="">Account Number :</td>
+                            <td style="padding-left: 5px;">  </td>
+                            <td style="padding-left: 5px;">987654321</td>
+                        </tr>
+                        <tr>
+                            <td style="">Amount :</td>
+                            <td style="padding-left: 5px;">  </td>
+                            <td style="padding-left: 5px;">RM 1250.10</td>
+                        </tr>
+                    </table>
+                    <div class="btnDiv">
+                            <button class="btn btn-info" id="editAmount">Edit Amount</button>
+                            <button class="btn btn-success" id="confirmTransaction">Confirm</button>
+                    </div>
+                </div>
+    </div>
+    <div id="footer">
+
+    </div>
+    <div id="loading" class="loading">
+        <div class="overlay"></div>
+        <img class="loader-icon" src="webfonts/loading.svg" alt="Loader">
+        <div class="text-center loading-text" id="loading-text">Processing</div>
+    </div>
+</body>
+
+</html>

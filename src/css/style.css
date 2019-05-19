@@ -141,7 +141,7 @@ body{
 
 .loading {
 	z-index:2;
-	display: none;
+	display: block;
 }
 
 .loader-icon {

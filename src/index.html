@@ -1,34 +1,130 @@
-<!DOCTYPE html>
 <html>
+
 <head>
-    <title>ATM / CDM - HCI Assignment 1</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.toast.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/fontawesome.all.min.css" />
+    <link rel="stylesheet" href="css/jquery.toast.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Splash Screen - ATM</title>
+
+    <style>
+        button {
+                z-index: 2;
+            }
+    </style>
     <script>
-        var isBox = true;
-        function changesize()
-        {
-            if(!isBox)
-            {
-                document.getElementById("divFrame").removeAttribute("style");
-                document.getElementById("divFrame").setAttribute("style", "min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px; margin: auto; overflow: hidden;");
-				document.getElementById("frame").removeAttribute("style");
-                document.getElementById("frame").setAttribute("style", "min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px;");
-                isBox = true;
-            }
-            else
-            {
-                document.getElementById("divFrame").removeAttribute("style");
-                document.getElementById("divFrame").setAttribute("style", "min-width: 1080px; min-height: 720px; max-width: 1080px; max-height: 720px; margin: auto; overflow: hidden;");
-				document.getElementById("frame").removeAttribute("style");
-                document.getElementById("frame").setAttribute("style", "min-width: 1080px; min-height: 720px; max-width: 1080px; max-height: 720px;");
-                isBox = false;
-            }
-        }       
+        $(document).ready(function () {
+            Main.addBtnListener("insertCard", function () {
+                Main.addBtnListener("aEnglish", function () {
+                    Main.redirect("enterpin.html");
+                });
+                $("#splashLanguageModal").modal('show');
+            });
+
+            Main.addBtnListener("touchOverlay", function () {
+                $("#splashLanguageModal").modal('show');
+            });
+
+            Main.addBtnListener("aEnglish", function () {
+                $("#splashCardlessModal").modal("show");   
+                $("#splashLanguageModal").modal('hide');
+            });
+
+            Main.addBtnListener("aMalay", function () {
+                $.toast({
+                    text: s.languageUnavailable,
+                    position: 'bottom-center',
+                    stack: false,
+                    allowToastClose: true
+                });
+            });
+
+            Main.addBtnListener("aATM", function() {
+                Main.redirect("cardless.login.html");
+            });
+
+             Main.addBtnListener("aCDM", function() {
+                Main.redirect("deposit.accountnumber.html");
+            });
+        });
     </script>
 </head>
-<body>
-	<button style="top: 5px; right: 5px; position:fixed;" id="size" onclick="changesize()">&#x3C;--&#x3E;</button>
-	<div id="divFrame" style="min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px; margin: auto; overflow: hidden;">
-		<iframe id="frame" src="atm.html" style="min-width: 720px; min-height: 720px; max-width: 720px; max-height: 720px;"></iframe>
-	</div>
+
+<body class="background">
+    <div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+    <div id="content">
+        <div class="background-title">Some Bank</div>
+
+        <div class="background-info">Touch to start</div>
+
+        <div class="overlay" id="touchOverlay" style="background: none; z-index: 0; cursor: auto;"></div>
+
+        <button class="btn btn-success btnBottomRight" id="insertCard">Insert Card</button>
+
+    </div>
+    <div id="footer">
+        <div class="modal fade" id="splashLanguageModal" tabindex="-1" role="dialog" aria-labelledby="splashLanguageModal"
+            aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: black">Pilih Bahasa / Choose Language</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <button class="btn btn-info" id="aMalay">Malay</button>
+                            <button class="btn btn-info" id="aEnglish">English</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="splashCardlessModal" tabindex="-1" role="dialog" aria-labelledby="splashCardlessModal"
+            aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: black">Choose an option</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <button class="btn btn-info" id="aATM">Cardless ATM</button>
+                            <button class="btn btn-info" id="aCDM">Cash Deposit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading" class="loading">
+        <div class="overlay"></div>
+        <img class="loader-icon" src="webfonts/loading.svg" alt="Loader">
+        <div class="text-center loading-text" id="loading-text">Loading</div>
+    </div>
 </body>
+
 </html>

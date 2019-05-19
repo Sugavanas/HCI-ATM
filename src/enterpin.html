@@ -1,0 +1,272 @@
+<html>
+
+<head>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.toast.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/fontawesome.all.min.css" />
+    <link rel="stylesheet" href="css/jquery.toast.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Enter Pin- ATM</title>
+    <style>
+        .pinBoxes {
+            /*top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            position: absolute;*/
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .pinBoxes:hover>.pinBox,
+        .pinBoxes.focus>.pinBox {
+            background: rgba(109, 109, 109, 0.5);
+        }
+
+        .pinBox {
+            height: 40px;
+            width: 30px;
+            display: inline-block;
+            background: rgba(25, 25, 25, 0.5);
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var noOfTries = 0;
+
+            var addC = function(val){
+                var pin =  $("#pinNumber").val().toString();
+                if(pin.length < 6) // not more than max
+                    $("#pinNumber").val(pin + val).trigger('change');
+                numPad.highlightKeysWhileTyping(val);
+            };
+
+            var backspaceC = function() {
+                $("#pinNumber").val(
+                    function(index, value){
+                        return value.substr(0, value.length - 1);
+                }).trigger('change');
+            };
+
+            var clearC = function() {
+                $("#pinNumber").val("").trigger('change');
+            };  
+
+            var confirmC = function() {
+                $("#error").css("display", "none");
+                var pin =  $("#pinNumber").val().toString();
+
+                if(pin.length >= 6)
+                {
+                    Main.showLoader();
+                    if(pin === "123456")
+                        Main.redirect("menu.html");
+                    else
+                    {
+                        setTimeout(function(){
+                            noOfTries++;
+                            $("#error").html("Invalid Pin. Please try again.").css("display", "block");
+                            clearC();
+                            
+                            if(noOfTries >= 3)
+                                Main.redirect("enterpin.account.locked.html");
+                            else
+                                Main.hideLoader();
+                        }, 1000);
+                    }
+                }
+            }
+            
+            numPad.load(confirmC, function(){ Main.defaultCancelCallback(""); }, clearC, 6, 6, false, true, false);
+            
+            Main.bindKeyboardListener("pinBoxes", function(key) {
+                if(key >= 48 &&  key <= 57) //48 is 0 and 57 is 1
+                   addC(String.fromCharCode(key));
+                else if(key === 8)
+                   backspaceC();
+                else if(key === 13)
+                    confirmC();
+                else
+                {
+                    $.toast({
+                        text: s.eNumbers,
+                        position: 'bottom-center',
+                        stack: false,
+                        allowToastClose: true
+                    })
+                }
+            });
+
+            $("#pinNumber").on("change", function() {
+                var pin = $(this).val().toString();
+
+                numPad.changeText(pin);
+
+                var i = 1;
+                //looping every time there is a change is not the best way to do it, but who cares
+                $(".pinBox").each(function() {
+                    $(this).css("background-image", "");
+                    if(i <= pin.length)
+                        $(this).css("background-image", "radial-gradient(circle at center, #fff 5px, transparent 6px)");
+                    i++
+                });
+
+                if(pin.length >= 6)
+                    $("#confirmPin").removeAttr("disabled");
+                else
+                    $("#confirmPin").attr("disabled", "true");
+            });
+
+            Main.addBtnListener("pinBoxes", function(){
+                $("#numPadModal").modal('show');
+
+                //simple hack to highlight the div
+                $(".pinBoxes").addClass("focus");
+                $(document).mouseup(function(e) 
+                {
+                    $(".pinBoxes").removeClass("focus");
+                    $(document).unbind("mouseup");
+                });
+            });
+
+            Main.addBtnListener("confirmPin", confirmC);
+            Main.addBtnListener("clearPin", clearC);
+            
+            Main.addDefaultCancelBtn();
+            Main.addNumPadToolTip("pinBoxes");
+        });
+    </script>
+</head>
+
+<body class="background">
+    <div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+    <div id="content">
+        <div class="pageContent">
+            <div class="title text-center">Enter pin</div>
+
+            <div class="alert alert-danger" id="error" role="alert" style="display:none;">
+
+            </div>
+
+            <div class="pinBoxes" id="pinBoxes">
+                <div class="pinBox"></div>
+                <div class="pinBox"></div>
+                <div class="pinBox"></div>
+                <div class="pinBox"></div>
+                <div class="pinBox"></div>
+                <div class="pinBox"></div>
+            </div>
+            <input type="hidden" id="pinNumber" />
+            <div class="btnDiv">
+                <button class="btn btn-warning" id="clearPin">Clear</button>
+                <button class="btn btn-success" id="confirmPin" disabled>Confirm</button>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+            <div class="modal fade" id="numPadModal" tabindex="-1" role="dialog" aria-labelledby="numPadModal"
+            aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center">
+                        <label for="numPadInput">Enter Pin</label>
+                        <input type="text" id="numPadInputMask" class="form-control" autocomplete="off" disabled />
+                        <input type="hidden" id="numPadInput" class="form-control" autocomplete="off"/>
+                        <div class="numpad" id="numpad">
+                            <div style="width: 65%; padding: 10px 5px; display:inline-block;">
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="1">1</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="2">2</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="3">3</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="4">4</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="5">5</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="6">6</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="7">7</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="8">8</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="9">9</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadKey">
+                                        <button class="btn">.</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadKeyNumber" data-val="0">0</button>
+                                    </div>
+                                    <div class="numPadKey">
+                                        <button class="btn numPadBackSpace"><i class="fas fa-backspace"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width:30%; display:inline-block; vertical-align: top; padding: 10px 0px;">
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+                                        <button class="btn btn-danger numPadCancel">Cancel</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+                                        <button class="btn btn-warning numPadClear">Clear</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+                                        <button class="btn btn-success numPadConfirm">Confirm</button>
+                                    </div>
+                                </div>
+                                <div class="numPadRow">
+                                    <div class="numPadBtn">
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading" class="loading">
+        <div class="overlay"></div>
+        <img class="loader-icon" src="webfonts/loading.svg" alt="Loader">
+        <div class="text-center loading-text" id="loading-text">Loading</div>
+    </div>
+</body>
+
+</html>

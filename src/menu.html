@@ -1,0 +1,418 @@
+<html>
+
+<head>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.toast.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/fontawesome.all.min.css" />
+    <link rel="stylesheet" href="css/jquery.toast.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menu - ATM</title>
+    <style>
+        .menu-header {
+            margin: 15px;
+        }
+
+        .menu-box {
+            /* height: 100% */
+            width: 100%;
+            height: auto;
+            background-color: rgba(0,0,0, 0.2);
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .menu-box > div {
+            /* height: 100% */
+            height: auto;
+            width: 100%;
+            margin: auto;
+            padding-bottom: 10%;
+            font-weight: 600;
+        }
+
+        .row {
+            margin: 15px 0;
+        }
+
+        .menu-box::before{
+            content: "";
+            display: block;
+            padding-top: 80%;  /* initial ratio of 1:1*/
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: contain;
+            margin: 0px 30%;
+        }
+
+        #menu-withdraw.menu-box::before {
+            background: url("webfonts/icons/atm.svg")center no-repeat;
+            background-size: contain;
+        }
+
+        #menu-deposit.menu-box::before {
+            background: url("webfonts/icons/deposit.svg")center no-repeat;
+            background-size: contain;
+        }
+
+        #menu-transfer.menu-box::before {
+            background: url("webfonts/icons/transfer.svg")center no-repeat;
+            background-size: contain;
+        }
+
+        #menu-balance.menu-box::before {
+            background: url("webfonts/icons/balance.svg")center no-repeat;
+            background-size: contain;
+        }
+
+        #menu-loans.menu-box::before {
+            background: url("webfonts/icons/loan.svg")center no-repeat;
+            background-size: contain;
+        }
+
+        #menu-others.menu-box::before {
+            background: url("webfonts/icons/others.svg")center no-repeat;
+            background-size: contain;
+        }
+
+        .displayName {
+            float: left;
+            font-size: 25px;
+        }
+
+        .displayTime {
+            float: right;
+            font-size: 25px;
+        }
+
+        .helpBtn {
+            width: 45px;
+            height: 45px;
+            padding: 6px 0px;
+            border-radius: 22.5px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.42857;
+            font-size: 20px;
+        }
+
+        #content        {
+            overflow: hidden;
+        }
+
+        .fastcash {
+            margin: 5px auto;
+            color: #fff;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var padTime = function (value) {
+                var zero = 2 - value.toString().length + 1;
+                return Array(+(zero > 0 && zero)).join("0") + value;
+            }
+
+            var updateTime = function () {
+                var now = new Date();
+                $("#displayTime").html(padTime(now.getHours()) + ':' + padTime(now.getMinutes()) + ':' + padTime(now.getSeconds()));
+                setTimeout(function () {
+                    updateTime(); //recursive
+                }, 1000);
+            }
+            updateTime();
+
+            Main.addDefaultCancelBtn();
+
+            Main.addBtnListener("menu-deposit", function () {
+                $("#dSModal").modal("show");
+                $("#aSModalTitle").html("Select account type to deposit to");
+                Main.addBtnListener("aOther", function () {
+                    $("#dSModal").modal("hide");
+                    Main.redirect("deposit.accountnumber.html");
+                });
+                Main.addBtnListener("aOwnAccount", function () {
+                    $("#dSModal").modal("hide");
+                    $("#aSModal").modal("show");
+                    Main.addBtnListener("aSavings", function () {
+                        Main.redirect("deposit.amount.html");
+                    });
+                    Main.addBtnListener("aCurrent", function () {
+                        Main.redirect("deposit.amount.html");
+                    });
+                });
+
+
+            });
+
+            Main.addBtnListener("menu-transfer", function () {
+                $("#dSModal").modal("show");
+                $("#aSModalTitle").html("Select account type to transfer from");
+                Main.addBtnListener("aOther", function () {
+                    $("#dSModal").modal("hide");
+                    $("#aSModal").modal("show");
+                   
+                });
+                Main.addBtnListener("aOwnAccount", function () {
+                    $("#dSModal").modal("hide");
+                    $("#aSModal").modal("show");
+                });
+                
+                Main.addBtnListener("aSavings", function () {
+                    Main.redirect("transfer.amount.html");
+                });
+                Main.addBtnListener("aCurrent", function () {
+                    Main.redirect("transfer.amount.html");
+                });
+
+            });
+
+            Main.addBtnListener("menu-withdraw", function () {
+                $("#aSModal").modal("show");
+                Main.addBtnListener("aSavings", function () {
+                    $("#aSModal").modal("hide");
+                    $("#fastCashModal").modal("show");
+                });
+                Main.addBtnListener("aCurrent", function () {
+                    $("#aSModal").modal("hide");
+                    $("#fastCashModal").modal("show");
+                });
+
+
+                $("#fastCashModal").find(".fastCash").each(function () {
+                    $(this).on("click", function () {
+                        var amount = parseFloat($(this).data("val"));
+                        if (amount == 0) {
+                            Main.redirect("withdraw.amount.html");
+                        } else if (amount > 250) {
+                            $.toast({
+                                text: s.lowBalance + "287.50",
+                                position: 'bottom-center',
+                                stack: false,
+                                allowToastClose: true
+                            });
+                        } else {
+                            Main.redirect("withdraw.success.html");
+                        }
+                    });
+                });
+            });
+
+            Main.addBtnListener("menu-balance", function () {
+                $("#aSModal").modal("show");
+                var showBalance = function (balance) {
+                    $("#aSModal").modal("hide");
+                    $("#balanceModalText").html("Your balance is RM " + balance);
+                    $("#balanceModal").modal("show");
+                };
+                Main.addBtnListener("aSavings", function () {
+                    showBalance("1004.00");
+                });
+                Main.addBtnListener("aCurrent", function () {
+                    showBalance("287.50");
+                });
+            });
+
+            Main.addBtnListener("menu-others", function () {
+                $.toast({
+                    text: s.functionUnavailable,
+                    position: 'bottom-center',
+                    stack: false,
+                    allowToastClose: true
+                });
+            });
+
+            Main.addBtnListener("menu-loans", function () {
+                $.toast({
+                    text: s.functionUnavailable,
+                    position: 'bottom-center',
+                    stack: false,
+                    allowToastClose: true
+                });
+            });
+
+        });
+    </script>
+</head>
+
+<body class="background">
+    <div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+        <div class="cube"></div>
+    </div>
+    <div id="content">
+        <div class="container-fluid">
+            <div class="menu-header">
+                <div class="displayName">Welcome, John!</div>
+                <div class="displayTime" id="displayTime">Current time</div>
+            </div>
+            <div class="col-md-12" style="clear:both; max-width: 125vh; padding-top: 10px; margin: 0 auto;">
+                <div class="row">
+                    <div class="col ">
+                        <div class="menu-box" id="menu-withdraw">
+                            <div>
+                                Withdraw
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <div class="menu-box" id="menu-deposit">
+                            <div>
+                                Deposit
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <div class="menu-box" id="menu-transfer">
+                            <div>
+                                Transfer
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col ">
+                        <div class="menu-box" id="menu-balance">
+                            <div>
+                                Balance
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-cm-12">
+                        <div class="menu-box" id="menu-loans">
+                            <div>
+                                Loans
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col ">
+                        <div class="menu-box" id="menu-others">
+                            <div>
+                                Others
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-warning btnBottomRight helpBtn" data-toggle="modal" data-target="#helpModal">?</button>
+            <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel"
+                aria-hidden="true" style="color:#000;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="helpModalLabel">Help</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="font-size: 15px">
+                            Call +603-1234 5678 for support if you are facing any problem.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="modal fade" id="aSModal" tabindex="-1" role="dialog" aria-labelledby="aSModal" aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: black" id="aSModalTitle">Select account type</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <button class="btn btn-info" id="aSavings">Savings</button>
+                            <button class="btn btn-info" id="aCurrent">Current</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="balanceModal" tabindex="-1" role="dialog" aria-labelledby="balanceModal"
+            aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: black">Balance</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <p style="color: #000;" id="balanceModalText">Your balance is RM </p>
+                            <button class="btn btn-info" id="close">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="fastCashModal" tabindex="-1" role="dialog" aria-labelledby="fastCashModal"
+            aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: black">Select Amount</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <div class="row">
+                                <button class="btn btn-info fastCash" data-val="50">RM 50</button>
+                                <button class="btn btn-info fastCash" data-val="100">RM 100</button>
+                                <button class="btn btn-info fastCash" data-val="300">RM 300</button>
+                                <button class="btn btn-info fastCash" data-val="500">RM 500</button>
+                            </div>
+                            <div class="row">
+                                <button class="btn btn-warning fastCash" data-val="0">Other Amount</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="dSModal" tabindex="-1" role="dialog" aria-labelledby="dSModal"
+        aria-hidden="true">
+            <div class="modal-dialog numpadModalDialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" style="color: black">Choose an option</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <button class="btn btn-info" id="aOwnAccount">Own Account</button>
+                            <button class="btn btn-info" id="aOther">Enter Account Number</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading" class="loading">
+        <div class="overlay"></div>
+        <img class="loader-icon" src="webfonts/loading.svg" alt="Loader">
+        <div class="text-center loading-text" id="loading-text">Loading</div>
+    </div>
+</body>
+
+</html>
